@@ -1,0 +1,1794 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Polytoria — Build. Play. Create.</title>
+<link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Syne:wght@400;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg: #080b14;
+  --bg2: #0d1120;
+  --bg3: #111827;
+  --bg4: #1a2035;
+  --border: #1e2d4a;
+  --border2: #243252;
+  --text: #e8edf7;
+  --text2: #8899bb;
+  --text3: #5570a0;
+  --accent: #4f8fff;
+  --accent2: #7c5cff;
+  --accent3: #00d4aa;
+  --gold: #f5c842;
+  --red: #ff4d6d;
+  --red2: #c0213f;
+  --green: #22c55e;
+  --orange: #f59e0b;
+  --purple: #a855f7;
+  --glow: 0 0 20px rgba(79,143,255,0.3);
+  --glow2: 0 0 30px rgba(124,92,255,0.25);
+  --radius: 10px;
+  --radius2: 16px;
+}
+*{margin:0;padding:0;box-sizing:border-box}
+::-webkit-scrollbar{width:6px;height:6px}
+::-webkit-scrollbar-track{background:var(--bg2)}
+::-webkit-scrollbar-thumb{background:var(--border2);border-radius:3px}
+::-webkit-scrollbar-thumb:hover{background:var(--accent)}
+
+body{font-family:'Syne',sans-serif;background:var(--bg);color:var(--text);min-height:100vh;overflow-x:hidden}
+
+/* NAV */
+.nav{position:fixed;top:0;left:0;right:0;height:58px;background:rgba(8,11,20,0.95);backdrop-filter:blur(12px);border-bottom:1px solid var(--border);z-index:1000;display:flex;align-items:center;padding:0 16px;gap:12px}
+.nav-logo{font-family:'Orbitron',monospace;font-size:1.3rem;font-weight:900;background:linear-gradient(135deg,var(--accent),var(--accent2));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;white-space:nowrap;letter-spacing:2px;cursor:pointer}
+.nav-search{flex:1;max-width:320px;position:relative}
+.nav-search input{width:100%;background:var(--bg3);border:1px solid var(--border);border-radius:8px;padding:7px 12px 7px 36px;color:var(--text);font-size:.85rem;font-family:'Syne',sans-serif;outline:none;transition:.2s}
+.nav-search input:focus{border-color:var(--accent);background:var(--bg4)}
+.nav-search svg{position:absolute;left:10px;top:50%;transform:translateY(-50%);color:var(--text3);pointer-events:none}
+.nav-right{margin-left:auto;display:flex;align-items:center;gap:10px}
+.nav-bricks{background:linear-gradient(135deg,#f5c842,#f59e0b);color:#000;font-weight:700;font-size:.8rem;padding:5px 12px;border-radius:20px;cursor:pointer;white-space:nowrap}
+.nav-btn{background:var(--bg3);border:1px solid var(--border);color:var(--text2);padding:6px 12px;border-radius:8px;font-size:.82rem;cursor:pointer;font-family:'Syne',sans-serif;transition:.2s;white-space:nowrap}
+.nav-btn:hover{border-color:var(--accent);color:var(--accent)}
+.nav-icon{width:34px;height:34px;background:var(--bg3);border:1px solid var(--border);border-radius:8px;display:flex;align-items:center;justify-content:center;cursor:pointer;transition:.2s;position:relative;flex-shrink:0}
+.nav-icon:hover{border-color:var(--accent);color:var(--accent)}
+.nav-badge{position:absolute;top:-4px;right:-4px;background:var(--red);color:#fff;font-size:.6rem;font-weight:700;width:16px;height:16px;border-radius:50%;display:flex;align-items:center;justify-content:center}
+.nav-avatar{width:34px;height:34px;background:linear-gradient(135deg,var(--accent),var(--accent2));border-radius:8px;display:flex;align-items:center;justify-content:center;font-weight:700;font-size:.85rem;cursor:pointer;border:1px solid var(--border)}
+
+/* LAYOUT */
+.layout{display:flex;margin-top:58px;min-height:calc(100vh - 58px)}
+.sidebar{width:220px;flex-shrink:0;background:var(--bg2);border-right:1px solid var(--border);padding:12px 8px;position:fixed;top:58px;bottom:0;left:0;overflow-y:auto}
+.main{margin-left:220px;flex:1;padding:24px;min-height:calc(100vh - 58px)}
+
+.sidebar-section{margin-bottom:4px}
+.sidebar-label{font-size:.65rem;font-weight:700;color:var(--text3);text-transform:uppercase;letter-spacing:1.5px;padding:8px 10px 4px}
+.sidebar-item{display:flex;align-items:center;gap:10px;padding:8px 10px;border-radius:8px;cursor:pointer;transition:.15s;color:var(--text2);font-size:.85rem;font-weight:600;position:relative}
+.sidebar-item:hover{background:var(--bg3);color:var(--text)}
+.sidebar-item.active{background:linear-gradient(135deg,rgba(79,143,255,.15),rgba(124,92,255,.1));color:var(--accent);border:1px solid rgba(79,143,255,.2)}
+.sidebar-item svg{flex-shrink:0}
+.sidebar-badge{margin-left:auto;background:var(--red);color:#fff;font-size:.6rem;font-weight:700;min-width:18px;height:18px;border-radius:9px;display:flex;align-items:center;justify-content:center;padding:0 4px}
+.sidebar-badge.gold{background:var(--gold);color:#000}
+.sidebar-badge.green{background:var(--green);color:#000}
+
+/* PAGES */
+.page{display:none;animation:fadeIn .25s ease}
+.page.active{display:block}
+@keyframes fadeIn{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:translateY(0)}}
+
+/* CARDS */
+.card{background:var(--bg2);border:1px solid var(--border);border-radius:var(--radius2);padding:20px;transition:.2s}
+.card:hover{border-color:var(--border2)}
+.card-sm{background:var(--bg2);border:1px solid var(--border);border-radius:var(--radius);padding:14px}
+
+/* GRID */
+.grid2{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+.grid3{display:grid;grid-template-columns:repeat(3,1fr);gap:14px}
+.grid4{display:grid;grid-template-columns:repeat(4,1fr);gap:14px}
+
+/* PAGE HEADER */
+.page-header{margin-bottom:24px}
+.page-title{font-family:'Orbitron',monospace;font-size:1.6rem;font-weight:900;background:linear-gradient(135deg,var(--text),var(--text2));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+.page-sub{color:var(--text2);font-size:.9rem;margin-top:4px}
+
+/* TABS */
+.tabs{display:flex;gap:4px;margin-bottom:20px;background:var(--bg2);border:1px solid var(--border);padding:4px;border-radius:10px;width:fit-content}
+.tab{padding:6px 16px;border-radius:7px;cursor:pointer;font-size:.82rem;font-weight:600;color:var(--text2);transition:.2s}
+.tab.active{background:linear-gradient(135deg,var(--accent),var(--accent2));color:#fff}
+.tab:hover:not(.active){color:var(--text)}
+
+/* BUTTONS */
+.btn{display:inline-flex;align-items:center;gap:6px;padding:8px 18px;border-radius:8px;font-family:'Syne',sans-serif;font-size:.85rem;font-weight:600;cursor:pointer;border:none;transition:.2s}
+.btn-primary{background:linear-gradient(135deg,var(--accent),var(--accent2));color:#fff}
+.btn-primary:hover{opacity:.9;transform:translateY(-1px)}
+.btn-success{background:var(--green);color:#000}
+.btn-danger{background:var(--red);color:#fff}
+.btn-warning{background:var(--orange);color:#000}
+.btn-ghost{background:transparent;border:1px solid var(--border);color:var(--text2)}
+.btn-ghost:hover{border-color:var(--accent);color:var(--accent)}
+.btn-gold{background:linear-gradient(135deg,var(--gold),#e6a800);color:#000}
+.btn-sm{padding:5px 12px;font-size:.78rem}
+.btn-xs{padding:3px 8px;font-size:.72rem}
+
+/* HERO */
+.hero{background:linear-gradient(135deg,#0a0f2a 0%,#0d1a3a 40%,#0a0d20 100%);border:1px solid var(--border);border-radius:var(--radius2);padding:40px;margin-bottom:24px;position:relative;overflow:hidden}
+.hero::before{content:'';position:absolute;top:-60px;right:-60px;width:300px;height:300px;background:radial-gradient(circle,rgba(79,143,255,.12),transparent 70%);pointer-events:none}
+.hero::after{content:'';position:absolute;bottom:-40px;left:30%;width:200px;height:200px;background:radial-gradient(circle,rgba(124,92,255,.08),transparent 70%);pointer-events:none}
+.hero h1{font-family:'Orbitron',monospace;font-size:2.2rem;font-weight:900;line-height:1.2;background:linear-gradient(135deg,#fff 0%,var(--accent) 50%,var(--accent2) 100%);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;margin-bottom:10px}
+.hero p{color:var(--text2);font-size:1rem;margin-bottom:20px;max-width:480px}
+.hero-actions{display:flex;gap:10px}
+.hero-stats{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-top:24px;padding-top:24px;border-top:1px solid var(--border)}
+.hero-stat-val{font-family:'Orbitron',monospace;font-size:1.3rem;font-weight:700;color:var(--accent)}
+.hero-stat-lbl{font-size:.72rem;color:var(--text3);margin-top:2px}
+
+/* GAME CARD */
+.game-card{background:var(--bg2);border:1px solid var(--border);border-radius:var(--radius2);overflow:hidden;cursor:pointer;transition:.2s}
+.game-card:hover{border-color:var(--accent);transform:translateY(-3px);box-shadow:var(--glow)}
+.game-thumb{height:130px;position:relative;display:flex;align-items:center;justify-content:center;font-size:2rem}
+.game-info{padding:12px}
+.game-name{font-weight:700;font-size:.88rem;margin-bottom:4px}
+.game-meta{display:flex;align-items:center;gap:8px;font-size:.72rem;color:var(--text2)}
+.game-badge{background:rgba(79,143,255,.15);color:var(--accent);border:1px solid rgba(79,143,255,.25);padding:2px 7px;border-radius:20px;font-size:.68rem;font-weight:600}
+
+/* SHOP ITEM */
+.shop-item{background:var(--bg2);border:1px solid var(--border);border-radius:var(--radius2);overflow:hidden;cursor:pointer;transition:.2s}
+.shop-item:hover{border-color:var(--gold);transform:translateY(-2px)}
+.shop-thumb{height:140px;display:flex;align-items:center;justify-content:center;font-size:3rem;position:relative}
+.shop-info{padding:12px}
+.shop-name{font-weight:700;font-size:.85rem;margin-bottom:6px}
+.shop-price{display:flex;align-items:center;gap:6px;font-weight:700;color:var(--gold);font-size:.85rem}
+.shop-badge-lim{position:absolute;top:8px;right:8px;background:var(--red);color:#fff;font-size:.62rem;font-weight:700;padding:2px 7px;border-radius:20px}
+
+/* FORUM */
+.forum-post{background:var(--bg2);border:1px solid var(--border);border-radius:var(--radius);padding:14px;margin-bottom:8px;cursor:pointer;transition:.2s;display:flex;align-items:flex-start;gap:12px}
+.forum-post:hover{border-color:var(--border2);background:var(--bg3)}
+.forum-avatar{width:38px;height:38px;border-radius:8px;display:flex;align-items:center;justify-content:center;font-weight:700;font-size:.85rem;flex-shrink:0}
+.forum-body{flex:1}
+.forum-title{font-weight:700;font-size:.88rem;margin-bottom:4px}
+.forum-meta{font-size:.72rem;color:var(--text2)}
+.forum-stats{display:flex;gap:12px;font-size:.72rem;color:var(--text3);margin-top:6px}
+
+/* ACHIEVEMENTS */
+.ach-card{background:var(--bg2);border:1px solid var(--border);border-radius:var(--radius);padding:14px;display:flex;gap:14px;align-items:center}
+.ach-icon{width:50px;height:50px;border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:1.4rem;flex-shrink:0}
+.ach-info{flex:1}
+.ach-name{font-weight:700;font-size:.88rem;margin-bottom:3px}
+.ach-desc{font-size:.75rem;color:var(--text2);margin-bottom:6px}
+.progress-bar{background:var(--bg4);border-radius:20px;height:6px;overflow:hidden}
+.progress-fill{height:100%;border-radius:20px;transition:width .8s ease}
+
+/* MESSAGES */
+.msg-layout{display:grid;grid-template-columns:260px 1fr;gap:0;background:var(--bg2);border:1px solid var(--border);border-radius:var(--radius2);overflow:hidden;height:500px}
+.msg-list{border-right:1px solid var(--border);overflow-y:auto}
+.msg-conv{padding:12px;cursor:pointer;transition:.15s;display:flex;gap:10px;align-items:center;border-bottom:1px solid rgba(30,45,74,.5)}
+.msg-conv:hover{background:var(--bg3)}
+.msg-conv.active{background:rgba(79,143,255,.08);border-left:2px solid var(--accent)}
+.msg-conv-av{width:36px;height:36px;border-radius:8px;display:flex;align-items:center;justify-content:center;font-weight:700;font-size:.8rem;flex-shrink:0}
+.msg-conv-info{flex:1;min-width:0}
+.msg-conv-name{font-weight:700;font-size:.82rem;margin-bottom:2px}
+.msg-conv-preview{font-size:.72rem;color:var(--text2);overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.msg-area{display:flex;flex-direction:column}
+.msg-header{padding:12px 16px;border-bottom:1px solid var(--border);display:flex;align-items:center;gap:10px}
+.msg-messages{flex:1;padding:16px;overflow-y:auto;display:flex;flex-direction:column;gap:10px}
+.msg-bubble{max-width:70%;padding:10px 14px;border-radius:12px;font-size:.83rem;line-height:1.5}
+.msg-bubble.me{background:linear-gradient(135deg,var(--accent),var(--accent2));color:#fff;align-self:flex-end;border-radius:12px 12px 4px 12px}
+.msg-bubble.them{background:var(--bg3);border:1px solid var(--border);align-self:flex-start;border-radius:12px 12px 12px 4px}
+.msg-input-row{padding:12px 16px;border-top:1px solid var(--border);display:flex;gap:8px}
+.msg-input{flex:1;background:var(--bg3);border:1px solid var(--border);border-radius:8px;padding:8px 12px;color:var(--text);font-family:'Syne',sans-serif;font-size:.85rem;outline:none}
+.msg-input:focus{border-color:var(--accent)}
+
+/* GUILD CARD */
+.guild-card{background:var(--bg2);border:1px solid var(--border);border-radius:var(--radius2);padding:18px;cursor:pointer;transition:.2s}
+.guild-card:hover{border-color:var(--accent);transform:translateY(-2px);box-shadow:var(--glow)}
+.guild-icon{width:52px;height:52px;border-radius:12px;display:flex;align-items:center;justify-content:center;font-size:1.5rem;margin-bottom:12px}
+.guild-name{font-weight:700;margin-bottom:4px}
+.guild-meta{font-size:.75rem;color:var(--text2)}
+
+/* ADMIN */
+.admin-section{margin-bottom:24px}
+.admin-section-title{font-size:.7rem;font-weight:700;color:var(--text3);text-transform:uppercase;letter-spacing:1.5px;margin-bottom:10px;display:flex;align-items:center;gap:8px}
+.admin-section-title::after{content:'';flex:1;height:1px;background:var(--border)}
+.admin-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(180px,1fr));gap:8px}
+.admin-opt{background:var(--bg3);border:1px solid var(--border);border-radius:8px;padding:10px 12px;cursor:pointer;transition:.15s;display:flex;align-items:center;gap:8px;font-size:.8rem;font-weight:600}
+.admin-opt:hover{border-color:var(--accent);background:var(--bg4);transform:translateX(2px)}
+.admin-opt.danger:hover{border-color:var(--red);color:var(--red)}
+.admin-opt.success:hover{border-color:var(--green);color:var(--green)}
+.admin-opt.warning:hover{border-color:var(--orange);color:var(--orange)}
+.admin-opt.gold:hover{border-color:var(--gold);color:var(--gold)}
+.admin-opt svg{flex-shrink:0}
+
+/* USERS TABLE */
+.table-wrap{overflow-x:auto}
+table{width:100%;border-collapse:collapse;font-size:.82rem}
+th{text-align:left;padding:10px 12px;font-size:.7rem;font-weight:700;text-transform:uppercase;letter-spacing:1px;color:var(--text3);border-bottom:1px solid var(--border);background:var(--bg3)}
+td{padding:10px 12px;border-bottom:1px solid rgba(30,45,74,.4);vertical-align:middle}
+tr:hover td{background:rgba(255,255,255,.02)}
+.user-cell{display:flex;align-items:center;gap:10px}
+.user-av{width:30px;height:30px;border-radius:6px;display:flex;align-items:center;justify-content:center;font-weight:700;font-size:.72rem;flex-shrink:0}
+.status-badge{display:inline-flex;align-items:center;gap:4px;font-size:.68rem;font-weight:700;padding:2px 8px;border-radius:20px}
+.status-active{background:rgba(34,197,94,.15);color:var(--green);border:1px solid rgba(34,197,94,.3)}
+.status-banned{background:rgba(255,77,109,.15);color:var(--red);border:1px solid rgba(255,77,109,.3)}
+.status-pending{background:rgba(245,158,11,.15);color:var(--orange);border:1px solid rgba(245,158,11,.3)}
+.verified-badge{display:inline-flex;align-items:center;gap:3px;font-size:.65rem;color:var(--accent);background:rgba(79,143,255,.1);padding:1px 6px;border-radius:20px;border:1px solid rgba(79,143,255,.2)}
+.action-btns{display:flex;gap:4px;flex-wrap:wrap}
+
+/* MODAL */
+.modal-overlay{position:fixed;inset:0;background:rgba(0,0,0,.75);z-index:2000;display:flex;align-items:center;justify-content:center;padding:20px;backdrop-filter:blur(4px)}
+.modal{background:var(--bg2);border:1px solid var(--border2);border-radius:var(--radius2);width:100%;max-width:520px;max-height:85vh;overflow-y:auto;animation:modalIn .2s ease}
+@keyframes modalIn{from{opacity:0;transform:scale(.95)}to{opacity:1;transform:scale(1)}}
+.modal-header{padding:20px 20px 0;display:flex;align-items:center;justify-content:space-between;margin-bottom:16px}
+.modal-title{font-size:1.05rem;font-weight:700}
+.modal-close{width:28px;height:28px;background:var(--bg3);border:1px solid var(--border);border-radius:6px;cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:1rem;color:var(--text2);transition:.15s}
+.modal-close:hover{border-color:var(--red);color:var(--red)}
+.modal-body{padding:0 20px 20px}
+.form-group{margin-bottom:14px}
+.form-label{font-size:.78rem;font-weight:600;color:var(--text2);margin-bottom:6px;display:block}
+.form-input,.form-select,.form-textarea{width:100%;background:var(--bg3);border:1px solid var(--border);border-radius:8px;padding:8px 12px;color:var(--text);font-family:'Syne',sans-serif;font-size:.85rem;outline:none;transition:.2s}
+.form-input:focus,.form-select:focus,.form-textarea:focus{border-color:var(--accent)}
+.form-textarea{resize:vertical;min-height:80px}
+.form-select option{background:var(--bg3)}
+.modal-footer{display:flex;gap:8px;justify-content:flex-end;padding-top:12px;border-top:1px solid var(--border)}
+
+/* TOAST */
+.toast-container{position:fixed;bottom:20px;right:20px;z-index:9999;display:flex;flex-direction:column;gap:8px}
+.toast{background:var(--bg3);border:1px solid var(--border);border-radius:10px;padding:12px 16px;font-size:.83rem;font-weight:600;max-width:320px;animation:toastIn .25s ease;display:flex;align-items:center;gap:8px;box-shadow:0 4px 20px rgba(0,0,0,.4)}
+.toast.success{border-color:var(--green);color:var(--green)}
+.toast.error{border-color:var(--red);color:var(--red)}
+.toast.warning{border-color:var(--orange);color:var(--orange)}
+.toast.info{border-color:var(--accent);color:var(--accent)}
+@keyframes toastIn{from{opacity:0;transform:translateX(20px)}to{opacity:1;transform:translateX(0)}}
+
+/* STATS CARD */
+.stat-card{background:var(--bg2);border:1px solid var(--border);border-radius:var(--radius);padding:16px}
+.stat-val{font-family:'Orbitron',monospace;font-size:1.6rem;font-weight:700;margin-bottom:2px}
+.stat-lbl{font-size:.72rem;color:var(--text2)}
+.stat-change{font-size:.72rem;margin-top:4px}
+.stat-up{color:var(--green)}
+.stat-down{color:var(--red)}
+
+/* LEVEL BAR */
+.level-section{background:var(--bg2);border:1px solid var(--border);border-radius:var(--radius);padding:14px 16px;margin-bottom:16px;display:flex;align-items:center;gap:14px}
+.level-badge{width:44px;height:44px;background:linear-gradient(135deg,var(--accent),var(--accent2));border-radius:10px;display:flex;align-items:center;justify-content:center;font-family:'Orbitron',monospace;font-weight:700;font-size:.9rem;flex-shrink:0}
+.level-info{flex:1}
+.level-row{display:flex;justify-content:space-between;font-size:.78rem;margin-bottom:6px}
+.level-row span:first-child{font-weight:700}
+.level-row span:last-child{color:var(--text2)}
+
+/* PROFILE */
+.profile-banner{height:140px;background:linear-gradient(135deg,#0a1628,#12204a,#0d1525);border-radius:var(--radius2) var(--radius2) 0 0;position:relative;display:flex;align-items:flex-end;padding:16px}
+.profile-avatar{width:72px;height:72px;background:linear-gradient(135deg,var(--accent),var(--accent2));border-radius:14px;border:3px solid var(--bg2);display:flex;align-items:center;justify-content:center;font-size:1.6rem;font-weight:700;margin-top:-36px;flex-shrink:0}
+.profile-card{background:var(--bg2);border:1px solid var(--border);border-radius:var(--radius2);overflow:hidden;margin-bottom:16px}
+
+/* MEMBERSHIP */
+.plan-card{background:var(--bg2);border:2px solid var(--border);border-radius:var(--radius2);padding:24px;text-align:center;position:relative;transition:.2s}
+.plan-card.featured{border-color:var(--accent);background:linear-gradient(135deg,rgba(79,143,255,.06),rgba(124,92,255,.04))}
+.plan-card.gold-plan{border-color:var(--gold);background:linear-gradient(135deg,rgba(245,200,66,.06),rgba(230,168,0,.04))}
+.plan-badge{position:absolute;top:-11px;left:50%;transform:translateX(-50%);background:linear-gradient(135deg,var(--accent),var(--accent2));color:#fff;font-size:.65rem;font-weight:700;padding:3px 12px;border-radius:20px;white-space:nowrap}
+.plan-price{font-family:'Orbitron',monospace;font-size:2rem;font-weight:700;margin:12px 0 4px}
+.plan-period{font-size:.75rem;color:var(--text2)}
+.plan-features{text-align:left;margin:16px 0;display:flex;flex-direction:column;gap:8px}
+.plan-feature{display:flex;align-items:center;gap:8px;font-size:.82rem}
+.plan-feature.yes{color:var(--text)}
+.plan-feature.no{color:var(--text3);text-decoration:line-through}
+
+/* NOTIFICATIONS */
+.notif-panel{position:absolute;top:46px;right:0;width:320px;background:var(--bg2);border:1px solid var(--border2);border-radius:var(--radius2);padding:4px;z-index:1001;animation:dropIn .15s ease}
+@keyframes dropIn{from{opacity:0;transform:translateY(-8px)}to{opacity:1;transform:translateY(0)}}
+.notif-item{padding:10px 12px;border-radius:8px;cursor:pointer;transition:.15s;display:flex;gap:10px;align-items:flex-start;border-bottom:1px solid rgba(30,45,74,.5)}
+.notif-item:hover{background:var(--bg3)}
+.notif-item:last-child{border-bottom:none}
+.notif-dot{width:8px;height:8px;border-radius:50%;flex-shrink:0;margin-top:5px}
+.notif-text{font-size:.78rem;line-height:1.4}
+.notif-time{font-size:.65rem;color:var(--text3);margin-top:2px}
+
+/* SETTINGS */
+.settings-section{background:var(--bg2);border:1px solid var(--border);border-radius:var(--radius2);padding:20px;margin-bottom:16px}
+.settings-title{font-weight:700;margin-bottom:16px;display:flex;align-items:center;gap:8px}
+.toggle{position:relative;width:44px;height:24px}
+.toggle input{opacity:0;width:0;height:0}
+.toggle-slider{position:absolute;inset:0;background:var(--bg4);border-radius:24px;cursor:pointer;transition:.3s;border:1px solid var(--border)}
+.toggle-slider::before{content:'';position:absolute;width:16px;height:16px;background:var(--text3);border-radius:50%;left:3px;top:3px;transition:.3s}
+.toggle input:checked+.toggle-slider{background:var(--accent);border-color:var(--accent)}
+.toggle input:checked+.toggle-slider::before{transform:translateX(20px);background:#fff}
+.settings-row{display:flex;justify-content:space-between;align-items:center;padding:10px 0;border-bottom:1px solid rgba(30,45,74,.5)}
+.settings-row:last-child{border-bottom:none;padding-bottom:0}
+
+/* ANALYTICS */
+.analytics-bar{height:200px;background:var(--bg3);border-radius:var(--radius);padding:16px;display:flex;align-items:flex-end;gap:6px}
+.bar{flex:1;background:linear-gradient(to top,var(--accent),var(--accent2));border-radius:4px 4px 0 0;transition:height .5s ease;cursor:pointer;position:relative}
+.bar:hover{opacity:.85}
+.bar-label{position:absolute;bottom:-20px;left:50%;transform:translateX(-50%);font-size:.62rem;color:var(--text3);white-space:nowrap}
+
+/* LOGS */
+.log-terminal{background:#040608;border:1px solid #1a2a1a;border-radius:var(--radius);padding:14px;font-family:'JetBrains Mono',monospace;font-size:.72rem;height:260px;overflow-y:auto;line-height:1.7}
+.log-info{color:#22c55e}
+.log-warn{color:#f59e0b}
+.log-error{color:#ff4d6d}
+.log-debug{color:#6b7280}
+
+/* MISC */
+.divider{border:none;border-top:1px solid var(--border);margin:16px 0}
+.text-muted{color:var(--text2)}
+.text-gold{color:var(--gold)}
+.text-accent{color:var(--accent)}
+.text-green{color:var(--green)}
+.text-red{color:var(--red)}
+.flex{display:flex}
+.flex-between{display:flex;justify-content:space-between;align-items:center}
+.flex-center{display:flex;align-items:center}
+.gap-8{gap:8px}
+.gap-12{gap:12px}
+.gap-16{gap:16px}
+.mb-8{margin-bottom:8px}
+.mb-12{margin-bottom:12px}
+.mb-16{margin-bottom:16px}
+.mb-20{margin-bottom:20px}
+.mt-8{margin-top:8px}
+.mt-12{margin-top:12px}
+.fw-700{font-weight:700}
+.fs-sm{font-size:.82rem}
+.fs-xs{font-size:.72rem}
+.notif-wrap{position:relative}
+.dropdown-hidden{display:none}
+.dropdown-visible{display:block}
+
+@media(max-width:768px){
+  .sidebar{display:none}
+  .main{margin-left:0}
+  .grid3,.grid4{grid-template-columns:1fr 1fr}
+  .grid2{grid-template-columns:1fr}
+  .hero h1{font-size:1.4rem}
+  .msg-layout{grid-template-columns:1fr;height:auto}
+  .msg-list{display:none}
+}
+</style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav class="nav">
+  <div class="nav-logo" onclick="navigate('home')">POLYTORIA</div>
+  <div class="nav-search">
+    <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>
+    <input placeholder="Buscar juegos, usuarios...">
+  </div>
+  <div class="nav-right">
+    <div class="nav-bricks" onclick="showToast('💰 Balance: 2,450 Bricks','info')">🧱 2,450</div>
+    <div class="nav-icon notif-wrap" onclick="toggleNotif()">
+      <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 0 1-3.46 0"/></svg>
+      <div class="nav-badge">3</div>
+      <div class="notif-panel dropdown-hidden" id="notif-panel">
+        <div style="padding:10px 12px 6px;font-weight:700;font-size:.8rem;color:var(--text2)">Notificaciones</div>
+        <div class="notif-item"><div class="notif-dot" style="background:var(--accent)"></div><div><div class="notif-text">🎮 <b>UrbanCraft</b> ha ganado 500 nuevos jugadores</div><div class="notif-time">hace 5 min</div></div></div>
+        <div class="notif-item"><div class="notif-dot" style="background:var(--green)"></div><div><div class="notif-text">✅ Tu solicitud de verificación fue <b>aprobada</b></div><div class="notif-time">hace 1 hora</div></div></div>
+        <div class="notif-item"><div class="notif-dot" style="background:var(--gold)"></div><div><div class="notif-text">🧱 Recibiste <b>50 Bricks diarios</b></div><div class="notif-time">hace 3 horas</div></div></div>
+        <div class="notif-item"><div class="notif-dot" style="background:var(--purple)"></div><div><div class="notif-text">💬 Nuevo mensaje de <b>PixelKnight</b></div><div class="notif-time">hace 5 horas</div></div></div>
+      </div>
+    </div>
+    <div class="nav-icon" onclick="navigate('messages')">
+      <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+      <div class="nav-badge" style="background:var(--accent)">2</div>
+    </div>
+    <div class="nav-avatar" onclick="navigate('profile')">PX</div>
+    <div class="nav-btn" onclick="navigate('admin')">⚙ Admin</div>
+  </div>
+</nav>
+
+<!-- SIDEBAR -->
+<aside class="sidebar">
+  <div class="sidebar-section">
+    <div class="sidebar-label">Jugar</div>
+    <div class="sidebar-item active" onclick="navigate('home')" id="nav-home">
+      <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="m3 9 9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/></svg> Inicio
+    </div>
+    <div class="sidebar-item" onclick="navigate('games')" id="nav-games">
+      <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="m2 6 10.5-3L23 6"/><path d="M2 6v12l10.5 3L23 18V6"/></svg> Juegos
+      <span class="sidebar-badge green">12</span>
+    </div>
+  </div>
+  <div class="sidebar-section">
+    <div class="sidebar-label">Crear</div>
+    <div class="sidebar-item" onclick="navigate('creator')" id="nav-creator">
+      <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M3 9h18M9 21V9"/></svg> Creator Studio
+    </div>
+  </div>
+  <div class="sidebar-section">
+    <div class="sidebar-label">Economía</div>
+    <div class="sidebar-item" onclick="navigate('shop')" id="nav-shop">
+      <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M6 2 3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"/><line x1="3" y1="6" x2="21" y2="6"/><path d="M16 10a4 4 0 0 1-8 0"/></svg> Tienda
+    </div>
+  </div>
+  <div class="sidebar-section">
+    <div class="sidebar-label">Comunidad</div>
+    <div class="sidebar-item" onclick="navigate('forum')" id="nav-forum">
+      <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg> Foro
+      <span class="sidebar-badge">7</span>
+    </div>
+    <div class="sidebar-item" onclick="navigate('guilds')" id="nav-guilds">
+      <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg> Gremios
+    </div>
+    <div class="sidebar-item" onclick="navigate('messages')" id="nav-messages">
+      <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg> Mensajes
+      <span class="sidebar-badge">2</span>
+    </div>
+  </div>
+  <div class="sidebar-section">
+    <div class="sidebar-label">Mi Cuenta</div>
+    <div class="sidebar-item" onclick="navigate('achievements')" id="nav-achievements">
+      <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><circle cx="12" cy="8" r="6"/><path d="M15.477 12.89 17 22l-5-3-5 3 1.523-9.11"/></svg> Logros
+      <span class="sidebar-badge gold">3</span>
+    </div>
+    <div class="sidebar-item" onclick="navigate('profile')" id="nav-profile">
+      <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg> Perfil
+    </div>
+    <div class="sidebar-item" onclick="navigate('membership')" id="nav-membership">
+      <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg> Plus
+    </div>
+    <div class="sidebar-item" onclick="navigate('settings')" id="nav-settings">
+      <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M12.22 2h-.44a2 2 0 0 0-2 2v.18a2 2 0 0 1-1 1.73l-.43.25a2 2 0 0 1-2 0l-.15-.08a2 2 0 0 0-2.73.73l-.22.38a2 2 0 0 0 .73 2.73l.15.1a2 2 0 0 1 1 1.72v.51a2 2 0 0 1-1 1.74l-.15.09a2 2 0 0 0-.73 2.73l.22.38a2 2 0 0 0 2.73.73l.15-.08a2 2 0 0 1 2 0l.43.25a2 2 0 0 1 1 1.73V20a2 2 0 0 0 2 2h.44a2 2 0 0 0 2-2v-.18a2 2 0 0 1 1-1.73l.43-.25a2 2 0 0 1 2 0l.15.08a2 2 0 0 0 2.73-.73l.22-.39a2 2 0 0 0-.73-2.73l-.15-.08a2 2 0 0 1-1-1.74v-.5a2 2 0 0 1 1-1.74l.15-.09a2 2 0 0 0 .73-2.73l-.22-.38a2 2 0 0 0-2.73-.73l-.15.08a2 2 0 0 1-2 0l-.43-.25a2 2 0 0 1-1-1.73V4a2 2 0 0 0-2-2z"/><circle cx="12" cy="12" r="3"/></svg> Configuración
+    </div>
+    <div class="sidebar-item" onclick="navigate('admin')" id="nav-admin">
+      <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg> Panel Admin
+    </div>
+  </div>
+</aside>
+
+<!-- MAIN -->
+<main class="main">
+
+<!-- HOME -->
+<div class="page active" id="page-home">
+  <div class="hero">
+    <h1>Build. Play.<br>Create Together.</h1>
+    <p>La plataforma de gaming colaborativo donde tus creaciones cobran vida. Únete a más de 1.2M de jugadores.</p>
+    <div class="hero-actions">
+      <button class="btn btn-primary" onclick="showToast('🚀 ¡Iniciando Polytoria Creator!','success')">🚀 Empezar a Crear</button>
+      <button class="btn btn-ghost" onclick="navigate('games')">🎮 Explorar Juegos</button>
+    </div>
+    <div class="hero-stats">
+      <div><div class="hero-stat-val">1.2M+</div><div class="hero-stat-lbl">Jugadores activos</div></div>
+      <div><div class="hero-stat-val">48K+</div><div class="hero-stat-lbl">Juegos publicados</div></div>
+      <div><div class="hero-stat-val">320K+</div><div class="hero-stat-lbl">Items en tienda</div></div>
+      <div><div class="hero-stat-val">8.4K+</div><div class="hero-stat-lbl">Gremios activos</div></div>
+    </div>
+  </div>
+  <div class="level-section">
+    <div class="level-badge">12</div>
+    <div class="level-info">
+      <div class="level-row"><span>PixelBuilder_X</span><span>7,840 / 10,000 XP</span></div>
+      <div class="progress-bar"><div class="progress-fill" style="width:78%;background:linear-gradient(90deg,var(--accent),var(--accent2))"></div></div>
+    </div>
+    <button class="btn btn-gold btn-sm" onclick="showToast('🧱 ¡50 Bricks diarios reclamados!','success')">🧱 Reclamar Diarios</button>
+  </div>
+  <div class="flex-between mb-12">
+    <div class="fw-700" style="font-size:1rem">🔥 Juegos Populares</div>
+    <button class="btn btn-ghost btn-sm" onclick="navigate('games')">Ver todos →</button>
+  </div>
+  <div class="grid4 mb-20" id="featured-games"></div>
+  <div class="flex-between mb-12">
+    <div class="fw-700" style="font-size:1rem">🆕 Nuevos Lanzamientos</div>
+  </div>
+  <div class="grid4" id="new-games"></div>
+</div>
+
+<!-- GAMES -->
+<div class="page" id="page-games">
+  <div class="page-header">
+    <div class="page-title">Juegos</div>
+    <div class="page-sub">Explora miles de mundos creados por la comunidad</div>
+  </div>
+  <div class="flex gap-8 mb-16 flex-wrap">
+    <div class="tabs" id="genre-tabs">
+      <div class="tab active" onclick="filterGames('all',this)">Todos</div>
+      <div class="tab" onclick="filterGames('action',this)">Acción</div>
+      <div class="tab" onclick="filterGames('rpg',this)">RPG</div>
+      <div class="tab" onclick="filterGames('building',this)">Building</div>
+      <div class="tab" onclick="filterGames('race',this)">Carreras</div>
+      <div class="tab" onclick="filterGames('social',this)">Social</div>
+    </div>
+  </div>
+  <div class="grid4" id="all-games"></div>
+</div>
+
+<!-- CREATOR -->
+<div class="page" id="page-creator">
+  <div class="page-header">
+    <div class="page-title">Creator Studio</div>
+    <div class="page-sub">Construye tus propios mundos con herramientas potentes</div>
+  </div>
+  <div class="tabs mb-16">
+    <div class="tab active" onclick="switchTab('creator','projects',this)">Mis Proyectos</div>
+    <div class="tab" onclick="switchTab('creator','templates',this)">Plantillas</div>
+    <div class="tab" onclick="switchTab('creator','assets',this)">Biblioteca de Assets</div>
+    <div class="tab" onclick="switchTab('creator','editor',this)">Editor Visual</div>
+    <div class="tab" onclick="switchTab('creator','scripts',this)">Scripts</div>
+  </div>
+  <div id="creator-projects">
+    <div class="flex-between mb-16">
+      <div class="fw-700">Mis Proyectos (4)</div>
+      <button class="btn btn-primary btn-sm" onclick="showToast('📁 Nuevo proyecto creado','success')">+ Nuevo Proyecto</button>
+    </div>
+    <div class="grid3" id="creator-proj-grid"></div>
+  </div>
+  <div id="creator-templates" style="display:none">
+    <div class="fw-700 mb-16">Plantillas Disponibles</div>
+    <div class="grid3" id="templates-grid"></div>
+  </div>
+  <div id="creator-assets" style="display:none">
+    <div class="flex-between mb-16">
+      <div class="fw-700">Biblioteca de Assets</div>
+      <div class="tabs"><div class="tab active">Audio</div><div class="tab" onclick="showToast('🎨 Modelos 3D','info')">Modelos 3D</div><div class="tab" onclick="showToast('🖼 Imágenes','info')">Imágenes</div></div>
+    </div>
+    <div class="grid4" id="assets-grid"></div>
+  </div>
+  <div id="creator-editor" style="display:none">
+    <div class="card mb-12">
+      <div class="fw-700 mb-12">Editor Visual — MiMundo_v2</div>
+      <div style="display:grid;grid-template-columns:auto 1fr auto;gap:12px;align-items:start">
+        <div style="display:flex;flex-direction:column;gap:6px">
+          <div style="font-size:.65rem;font-weight:700;color:var(--text3);text-transform:uppercase;letter-spacing:1px;margin-bottom:4px">Herramientas</div>
+          <div id="tool-btns"></div>
+        </div>
+        <div style="background:#040608;border-radius:8px;height:320px;display:grid;grid-template-columns:repeat(12,1fr);grid-template-rows:repeat(8,1fr);gap:1px;padding:8px;cursor:crosshair" id="editor-canvas"></div>
+        <div style="width:160px">
+          <div style="font-size:.65rem;font-weight:700;color:var(--text3);text-transform:uppercase;letter-spacing:1px;margin-bottom:8px">Propiedades</div>
+          <div id="editor-props"></div>
+        </div>
+      </div>
+      <div class="flex gap-8 mt-12">
+        <button class="btn btn-primary btn-sm" onclick="showToast('💾 Proyecto guardado','success')">💾 Guardar</button>
+        <button class="btn btn-success btn-sm" onclick="showToast('🚀 Publicando juego...','info')">🚀 Publicar</button>
+        <button class="btn btn-ghost btn-sm" onclick="showToast('▶ Iniciando preview...','info')">▶ Preview</button>
+      </div>
+    </div>
+  </div>
+  <div id="creator-scripts" style="display:none">
+    <div class="card">
+      <div class="fw-700 mb-12">Script Editor</div>
+      <div style="background:#040608;border:1px solid #1a2a1a;border-radius:8px;padding:16px;font-family:'JetBrains Mono',monospace;font-size:.78rem;line-height:1.7;min-height:200px">
+        <span style="color:#569cd6">local</span> <span style="color:#9cdcfe">Players</span> = <span style="color:#dcdcaa">game</span>:<span style="color:#dcdcaa">GetService</span>(<span style="color:#ce9178">"Players"</span>)<br>
+        <span style="color:#569cd6">local</span> <span style="color:#9cdcfe">spawnPart</span> = <span style="color:#9cdcfe">workspace</span>.<span style="color:#9cdcfe">SpawnPoint</span><br><br>
+        <span style="color:#9cdcfe">Players</span>.<span style="color:#dcdcaa">PlayerAdded</span>:<span style="color:#dcdcaa">Connect</span>(<span style="color:#569cd6">function</span>(<span style="color:#9cdcfe">player</span>)<br>
+        &nbsp;&nbsp;<span style="color:#dcdcaa">print</span>(<span style="color:#ce9178">"Player joined: "</span> .. <span style="color:#9cdcfe">player</span>.<span style="color:#9cdcfe">Name</span>)<br>
+        <span style="color:#569cd6">end</span>)
+      </div>
+      <div class="flex gap-8 mt-12">
+        <button class="btn btn-success btn-sm" onclick="showToast('▶ Script ejecutándose','success')">▶ Ejecutar</button>
+        <button class="btn btn-ghost btn-sm" onclick="showToast('✅ Sintaxis correcta','success')">✓ Verificar Sintaxis</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- SHOP -->
+<div class="page" id="page-shop">
+  <div class="page-header">
+    <div class="page-title">Tienda de Avatares</div>
+    <div class="page-sub">Personaliza tu avatar con miles de items exclusivos</div>
+  </div>
+  <div class="flex-between mb-16">
+    <div class="tabs">
+      <div class="tab active" onclick="filterShop('all',this)">Todo</div>
+      <div class="tab" onclick="filterShop('hats',this)">Sombreros</div>
+      <div class="tab" onclick="filterShop('faces',this)">Caras</div>
+      <div class="tab" onclick="filterShop('clothes',this)">Ropa</div>
+      <div class="tab" onclick="filterShop('accessories',this)">Accesorios</div>
+      <div class="tab" onclick="filterShop('limited',this)">Limitados 🔥</div>
+    </div>
+    <div class="nav-bricks">🧱 2,450 Bricks</div>
+  </div>
+  <div class="grid4" id="shop-grid"></div>
+</div>
+
+<!-- FORUM -->
+<div class="page" id="page-forum">
+  <div class="page-header">
+    <div class="page-title">Foro</div>
+    <div class="page-sub">Conecta, aprende y comparte con la comunidad</div>
+  </div>
+  <div class="flex-between mb-16">
+    <div class="tabs">
+      <div class="tab active" onclick="switchForumTab('general',this)">General</div>
+      <div class="tab" onclick="switchForumTab('building',this)">Construcción</div>
+      <div class="tab" onclick="switchForumTab('scripting',this)">Scripting</div>
+      <div class="tab" onclick="switchForumTab('suggestions',this)">Sugerencias</div>
+      <div class="tab" onclick="switchForumTab('showcase',this)">Showcase</div>
+    </div>
+    <button class="btn btn-primary btn-sm" onclick="openModal('new-post-modal')">+ Nuevo Post</button>
+  </div>
+  <div id="forum-posts"></div>
+</div>
+
+<!-- GUILDS -->
+<div class="page" id="page-guilds">
+  <div class="page-header">
+    <div class="page-title">Gremios</div>
+    <div class="page-sub">Únete a un grupo o crea el tuyo propio</div>
+  </div>
+  <div class="flex-between mb-16">
+    <div class="tabs">
+      <div class="tab active">Todos</div>
+      <div class="tab" onclick="showToast('🔍 Mis gremios','info')">Mis Gremios</div>
+      <div class="tab" onclick="showToast('⭐ Destacados','info')">Destacados</div>
+    </div>
+    <button class="btn btn-primary btn-sm" onclick="openModal('create-guild-modal')">+ Crear Gremio</button>
+  </div>
+  <div class="grid3" id="guilds-grid"></div>
+</div>
+
+<!-- MESSAGES -->
+<div class="page" id="page-messages">
+  <div class="page-header">
+    <div class="page-title">Mensajes</div>
+    <div class="page-sub">Buzón de mensajes y conversaciones</div>
+  </div>
+  <div class="msg-layout">
+    <div class="msg-list" id="msg-list"></div>
+    <div class="msg-area">
+      <div class="msg-header">
+        <div class="msg-conv-av" style="background:linear-gradient(135deg,#4f8fff,#7c5cff);color:#fff">PK</div>
+        <div>
+          <div class="fw-700 fs-sm">PixelKnight</div>
+          <div class="fs-xs text-muted">🟢 En línea</div>
+        </div>
+        <div style="margin-left:auto;display:flex;gap:6px">
+          <button class="btn btn-ghost btn-xs" onclick="showToast('📞 Llamada de voz','info')">📞</button>
+          <button class="btn btn-ghost btn-xs" onclick="showToast('🎮 Invitar a jugar','info')">🎮</button>
+        </div>
+      </div>
+      <div class="msg-messages" id="msg-messages">
+        <div class="msg-bubble them">¡Hola! ¿Quieres unirte a mi servidor esta noche?</div>
+        <div class="msg-bubble me">¡Claro! ¿A qué hora?</div>
+        <div class="msg-bubble them">A las 8pm, tenemos un torneo de construcción 🏗️</div>
+        <div class="msg-bubble me">Perfecto, ahí estaré 🎮</div>
+        <div class="msg-bubble them">¡Genial! Ya te agregué al gremio</div>
+      </div>
+      <div class="msg-input-row">
+        <input class="msg-input" id="msg-text" placeholder="Escribe un mensaje..." onkeypress="if(event.key==='Enter')sendMsg()">
+        <button class="btn btn-primary btn-sm" onclick="sendMsg()">Enviar</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ACHIEVEMENTS -->
+<div class="page" id="page-achievements">
+  <div class="page-header">
+    <div class="page-title">Logros</div>
+    <div class="page-sub">Desbloquea recompensas y sube de nivel</div>
+  </div>
+  <div class="grid3 mb-16">
+    <div class="stat-card"><div class="stat-val" style="color:var(--gold)">23</div><div class="stat-lbl">Logros Desbloqueados</div></div>
+    <div class="stat-card"><div class="stat-val" style="color:var(--accent)">7,840</div><div class="stat-lbl">XP Total Ganado</div></div>
+    <div class="stat-card"><div class="stat-val" style="color:var(--green)">1,200</div><div class="stat-lbl">Bricks de Recompensas</div></div>
+  </div>
+  <div class="tabs mb-16">
+    <div class="tab active">Todos</div>
+    <div class="tab" onclick="showToast('✅ Completados','info')">Completados</div>
+    <div class="tab" onclick="showToast('⏳ En Progreso','info')">En Progreso</div>
+    <div class="tab" onclick="showToast('🔒 Bloqueados','info')">Bloqueados</div>
+  </div>
+  <div style="display:flex;flex-direction:column;gap:10px" id="achievements-list"></div>
+</div>
+
+<!-- PROFILE -->
+<div class="page" id="page-profile">
+  <div class="profile-card">
+    <div class="profile-banner">
+      <div style="position:absolute;top:12px;right:12px;display:flex;gap:6px">
+        <button class="btn btn-ghost btn-xs" onclick="showToast('✏️ Editar banner','info')">✏️ Editar</button>
+      </div>
+    </div>
+    <div style="padding:0 20px 20px">
+      <div style="display:flex;align-items:flex-end;gap:14px;margin-top:-36px;margin-bottom:12px">
+        <div class="profile-avatar">🎮</div>
+        <div style="padding-bottom:4px">
+          <div style="font-size:1.2rem;font-weight:700;display:flex;align-items:center;gap:8px">
+            PixelBuilder_X
+            <span class="verified-badge">✔ Verificado</span>
+          </div>
+          <div class="fs-xs text-muted">Miembro desde Enero 2023 · Nivel 12</div>
+        </div>
+        <div style="margin-left:auto;padding-bottom:4px;display:flex;gap:8px">
+          <button class="btn btn-ghost btn-sm" onclick="showToast('✏️ Perfil editado','success')">✏️ Editar Perfil</button>
+          <button class="btn btn-primary btn-sm" onclick="showToast('🔗 Enlace copiado','info')">🔗 Compartir</button>
+        </div>
+      </div>
+      <div class="grid4 mb-16">
+        <div class="stat-card"><div class="stat-val">142</div><div class="stat-lbl">Juegos Jugados</div></div>
+        <div class="stat-card"><div class="stat-val">4</div><div class="stat-lbl">Juegos Creados</div></div>
+        <div class="stat-card"><div class="stat-val">23</div><div class="stat-lbl">Logros</div></div>
+        <div class="stat-card"><div class="stat-val">2,450</div><div class="stat-lbl">Bricks</div></div>
+      </div>
+      <div class="fw-700 mb-12">Inventario Reciente</div>
+      <div style="display:flex;gap:10px;flex-wrap:wrap" id="inventory-grid"></div>
+    </div>
+  </div>
+</div>
+
+<!-- MEMBERSHIP -->
+<div class="page" id="page-membership">
+  <div class="page-header">
+    <div class="page-title">Membresías Polytoria</div>
+    <div class="page-sub">Desbloquea beneficios exclusivos y apoya la plataforma</div>
+  </div>
+  <div class="grid3">
+    <div class="plan-card">
+      <div style="font-size:1.5rem;margin-bottom:8px">🆓</div>
+      <div style="font-size:1.1rem;font-weight:700">Free</div>
+      <div class="plan-price">$0</div>
+      <div class="plan-period">Para siempre gratis</div>
+      <div class="plan-features">
+        <div class="plan-feature yes">✅ 1 lugar público</div>
+        <div class="plan-feature yes">✅ Tienda básica</div>
+        <div class="plan-feature yes">✅ 50 Bricks/semana</div>
+        <div class="plan-feature yes">✅ Acceso al foro</div>
+        <div class="plan-feature no">❌ Items exclusivos</div>
+        <div class="plan-feature no">❌ Sin impuestos reducidos</div>
+        <div class="plan-feature no">❌ Sin insignia especial</div>
+      </div>
+      <button class="btn btn-ghost" style="width:100%">Plan Actual</button>
+    </div>
+    <div class="plan-card featured">
+      <div class="plan-badge">⭐ MÁS POPULAR</div>
+      <div style="font-size:1.5rem;margin-bottom:8px">⭐</div>
+      <div style="font-size:1.1rem;font-weight:700">Plus</div>
+      <div class="plan-price" style="color:var(--accent)">$4.99</div>
+      <div class="plan-period">por mes</div>
+      <div class="plan-features">
+        <div class="plan-feature yes">✅ 5 lugares públicos</div>
+        <div class="plan-feature yes">✅ Tienda completa</div>
+        <div class="plan-feature yes">✅ 300 Bricks/mes bonus</div>
+        <div class="plan-feature yes">✅ Items exclusivos Plus</div>
+        <div class="plan-feature yes">✅ 10% menos impuestos</div>
+        <div class="plan-feature yes">✅ Insignia ⭐ en perfil</div>
+        <div class="plan-feature no">❌ Sin Bricks extra diarios</div>
+      </div>
+      <button class="btn btn-primary" style="width:100%" onclick="showToast('⭐ ¡Suscripción Plus activada!','success')">Suscribirse</button>
+    </div>
+    <div class="plan-card gold-plan">
+      <div class="plan-badge" style="background:linear-gradient(135deg,var(--gold),#e6a800);color:#000">💎 PREMIUM</div>
+      <div style="font-size:1.5rem;margin-bottom:8px">💎</div>
+      <div style="font-size:1.1rem;font-weight:700">Plus Deluxe</div>
+      <div class="plan-price" style="color:var(--gold)">$9.99</div>
+      <div class="plan-period">por mes</div>
+      <div class="plan-features">
+        <div class="plan-feature yes">✅ Lugares ilimitados</div>
+        <div class="plan-feature yes">✅ 1,000 Bricks/mes bonus</div>
+        <div class="plan-feature yes">✅ Todos los items Plus</div>
+        <div class="plan-feature yes">✅ Items Deluxe exclusivos</div>
+        <div class="plan-feature yes">✅ 25% menos impuestos</div>
+        <div class="plan-feature yes">✅ Insignia 💎 en perfil</div>
+        <div class="plan-feature yes">✅ 100 Bricks/día bonus</div>
+        <div class="plan-feature yes">✅ Soporte prioritario</div>
+      </div>
+      <button class="btn btn-gold" style="width:100%" onclick="showToast('💎 ¡Suscripción Deluxe activada!','success')">Suscribirse</button>
+    </div>
+  </div>
+</div>
+
+<!-- SETTINGS -->
+<div class="page" id="page-settings">
+  <div class="page-header">
+    <div class="page-title">Configuración</div>
+    <div class="page-sub">Administra tu cuenta y preferencias</div>
+  </div>
+  <div class="grid2">
+    <div>
+      <div class="settings-section">
+        <div class="settings-title">👤 Cuenta</div>
+        <div class="form-group"><div class="form-label">Nombre de Usuario</div><input class="form-input" value="PixelBuilder_X"></div>
+        <div class="form-group"><div class="form-label">Correo Electrónico</div><input class="form-input" value="pixel@example.com" type="email"></div>
+        <div class="form-group"><div class="form-label">Contraseña</div><input class="form-input" value="••••••••" type="password"></div>
+        <button class="btn btn-primary btn-sm" onclick="showToast('✅ Cambios guardados','success')">Guardar Cambios</button>
+      </div>
+      <div class="settings-section">
+        <div class="settings-title">🔒 Privacidad</div>
+        <div class="settings-row"><div><div class="fs-sm fw-700">Perfil público</div><div class="fs-xs text-muted">Permitir que otros vean tu perfil</div></div><label class="toggle"><input type="checkbox" checked><span class="toggle-slider"></span></label></div>
+        <div class="settings-row"><div><div class="fs-sm fw-700">Mostrar actividad</div><div class="fs-xs text-muted">Mostrar qué juego estás jugando</div></div><label class="toggle"><input type="checkbox" checked><span class="toggle-slider"></span></label></div>
+        <div class="settings-row"><div><div class="fs-sm fw-700">Solicitudes de amistad</div><div class="fs-xs text-muted">Permitir solicitudes de desconocidos</div></div><label class="toggle"><input type="checkbox"><span class="toggle-slider"></span></label></div>
+      </div>
+    </div>
+    <div>
+      <div class="settings-section">
+        <div class="settings-title">🔔 Notificaciones</div>
+        <div class="settings-row"><div class="fs-sm fw-700">Mensajes directos</div><label class="toggle"><input type="checkbox" checked><span class="toggle-slider"></span></label></div>
+        <div class="settings-row"><div class="fs-sm fw-700">Invitaciones a gremios</div><label class="toggle"><input type="checkbox" checked><span class="toggle-slider"></span></label></div>
+        <div class="settings-row"><div class="fs-sm fw-700">Actualizaciones de juegos</div><label class="toggle"><input type="checkbox"><span class="toggle-slider"></span></label></div>
+        <div class="settings-row"><div class="fs-sm fw-700">Nuevos logros</div><label class="toggle"><input type="checkbox" checked><span class="toggle-slider"></span></label></div>
+        <div class="settings-row"><div class="fs-sm fw-700">Bricks diarios</div><label class="toggle"><input type="checkbox" checked><span class="toggle-slider"></span></label></div>
+        <div class="settings-row"><div class="fs-sm fw-700">Ofertas especiales</div><label class="toggle"><input type="checkbox"><span class="toggle-slider"></span></label></div>
+      </div>
+      <div class="settings-section">
+        <div class="settings-title">🎮 Preferencias</div>
+        <div class="form-group"><div class="form-label">Idioma</div><select class="form-select"><option>Español</option><option>English</option><option>Português</option></select></div>
+        <div class="form-group"><div class="form-label">Tema</div><select class="form-select"><option>Oscuro (Predeterminado)</option><option>Oscuro Azul</option><option>Neon</option></select></div>
+        <div class="settings-row"><div class="fs-sm fw-700">Autoplay videos</div><label class="toggle"><input type="checkbox" checked><span class="toggle-slider"></span></label></div>
+        <div class="settings-row"><div class="fs-sm fw-700">Efectos de sonido UI</div><label class="toggle"><input type="checkbox" checked><span class="toggle-slider"></span></label></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ADMIN -->
+<div class="page" id="page-admin">
+  <div class="page-header">
+    <div class="page-title">Panel de Administración</div>
+    <div class="page-sub">Control total de la plataforma — 120+ opciones disponibles</div>
+  </div>
+  <div class="tabs mb-20">
+    <div class="tab active" onclick="switchAdminTab('dashboard',this)">Dashboard</div>
+    <div class="tab" onclick="switchAdminTab('users',this)">Usuarios</div>
+    <div class="tab" onclick="switchAdminTab('moderation',this)">Moderación</div>
+    <div class="tab" onclick="switchAdminTab('economy',this)">Economía</div>
+    <div class="tab" onclick="switchAdminTab('content',this)">Contenido</div>
+    <div class="tab" onclick="switchAdminTab('system',this)">Sistema</div>
+    <div class="tab" onclick="switchAdminTab('analytics',this)">Analytics</div>
+    <div class="tab" onclick="switchAdminTab('all-options',this)">Todas las Opciones</div>
+  </div>
+
+  <!-- DASHBOARD TAB -->
+  <div id="admin-dashboard">
+    <div class="grid4 mb-16">
+      <div class="stat-card"><div class="stat-val" style="color:var(--accent)">1.24M</div><div class="stat-lbl">Usuarios Totales</div><div class="stat-change stat-up">▲ +2.4% esta semana</div></div>
+      <div class="stat-card"><div class="stat-val" style="color:var(--green)">48,320</div><div class="stat-lbl">Usuarios Activos Hoy</div><div class="stat-change stat-up">▲ +8.1%</div></div>
+      <div class="stat-card"><div class="stat-val" style="color:var(--red)">124</div><div class="stat-lbl">Bans Esta Semana</div><div class="stat-change stat-down">▼ -12%</div></div>
+      <div class="stat-card"><div class="stat-val" style="color:var(--gold)">892K</div><div class="stat-lbl">Bricks Circulando</div><div class="stat-change stat-up">▲ +5.2%</div></div>
+    </div>
+    <div class="grid4 mb-16">
+      <div class="stat-card"><div class="stat-val" style="color:var(--orange)">47</div><div class="stat-lbl">Reportes Pendientes</div></div>
+      <div class="stat-card"><div class="stat-val" style="color:var(--purple)">12</div><div class="stat-lbl">Apelaciones de Ban</div></div>
+      <div class="stat-card"><div class="stat-val" style="color:var(--accent3)">28</div><div class="stat-lbl">Verificaciones Pendientes</div></div>
+      <div class="stat-card"><div class="stat-val" style="color:var(--accent)">48,312</div><div class="stat-lbl">Juegos Publicados</div></div>
+    </div>
+    <div class="card">
+      <div class="fw-700 mb-12">Actividad de la Plataforma — Últimos 7 Días</div>
+      <div class="analytics-bar" id="dash-chart"></div>
+      <div style="display:flex;justify-content:space-between;margin-top:24px;font-size:.65rem;color:var(--text3);padding:0 4px">
+        <span>Lun</span><span>Mar</span><span>Mié</span><span>Jue</span><span>Vie</span><span>Sáb</span><span>Dom</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- USERS TAB -->
+  <div id="admin-users" style="display:none">
+    <div class="flex-between mb-12">
+      <div class="fw-700">Gestión de Usuarios</div>
+      <div class="flex gap-8">
+        <input class="form-input" style="width:200px" placeholder="Buscar usuario...">
+        <select class="form-select" style="width:140px"><option>Todos los estados</option><option>Activos</option><option>Baneados</option><option>Verificados</option></select>
+        <button class="btn btn-primary btn-sm" onclick="showToast('📋 Lista exportada','success')">Exportar CSV</button>
+      </div>
+    </div>
+    <div class="table-wrap card">
+      <table>
+        <thead><tr><th>Usuario</th><th>Nivel</th><th>Estado</th><th>Verificado</th><th>Bricks</th><th>Registro</th><th>Última actividad</th><th>Acciones</th></tr></thead>
+        <tbody id="users-table"></tbody>
+      </table>
+    </div>
+    <div class="flex gap-8 mt-12" style="justify-content:center">
+      <button class="btn btn-ghost btn-sm">← Anterior</button>
+      <button class="btn btn-primary btn-sm">1</button>
+      <button class="btn btn-ghost btn-sm">2</button>
+      <button class="btn btn-ghost btn-sm">3</button>
+      <button class="btn btn-ghost btn-sm">Siguiente →</button>
+    </div>
+  </div>
+
+  <!-- MODERATION TAB -->
+  <div id="admin-moderation" style="display:none">
+    <div class="admin-section">
+      <div class="admin-section-title">🔨 Bans y Sanciones</div>
+      <div class="admin-grid">
+        <div class="admin-opt danger" onclick="openModal('ban-modal')">🔨 Banear Usuario</div>
+        <div class="admin-opt success" onclick="openModal('unban-modal')">✅ Levantar Ban</div>
+        <div class="admin-opt warning" onclick="openModal('tempban-modal')">⏱ Ban Temporal</div>
+        <div class="admin-opt danger" onclick="openModal('ipban-modal')">🌐 Ban por IP</div>
+        <div class="admin-opt warning" onclick="openModal('warn-modal')">⚠️ Advertir Usuario</div>
+        <div class="admin-opt" onclick="openModal('mute-modal')">🔇 Silenciar Usuario</div>
+        <div class="admin-opt" onclick="showToast('📋 Historial de bans abierto','info')">📋 Ver Historial Bans</div>
+        <div class="admin-opt" onclick="showToast('📨 Apelaciones abiertas','info')">📨 Gestionar Apelaciones</div>
+        <div class="admin-opt danger" onclick="showToast('🗑 Cuenta marcada para eliminar','warning')">🗑 Eliminar Cuenta</div>
+        <div class="admin-opt warning" onclick="showToast('🔄 Sesiones cerradas','success')">🔄 Cerrar Sesiones</div>
+        <div class="admin-opt" onclick="showToast('📊 Reporte generado','info')">📊 Reporte de Sanciones</div>
+        <div class="admin-opt danger" onclick="showToast('🚫 Dispositivo baneado','warning')">🚫 Ban por Dispositivo</div>
+      </div>
+    </div>
+    <div class="admin-section">
+      <div class="admin-section-title">✔ Verificaciones</div>
+      <div class="admin-grid">
+        <div class="admin-opt success" onclick="openModal('verify-modal')">✔ Verificar Usuario</div>
+        <div class="admin-opt danger" onclick="openModal('unverify-modal')">✖ Quitar Verificación</div>
+        <div class="admin-opt" onclick="showToast('📋 Solicitudes abiertas','info')">📋 Ver Solicitudes (28)</div>
+        <div class="admin-opt gold" onclick="showToast('⭐ Verificación especial aplicada','success')">⭐ Verificación Especial</div>
+        <div class="admin-opt" onclick="showToast('📜 Criterios actualizados','info')">📜 Criterios de Verificación</div>
+        <div class="admin-opt warning" onclick="showToast('⏸ Verificaciones pausadas','warning')">⏸ Pausar Verificaciones</div>
+      </div>
+    </div>
+    <div class="admin-section">
+      <div class="admin-section-title">📨 Mensajes Oficiales</div>
+      <div class="admin-grid">
+        <div class="admin-opt" onclick="openModal('msg-modal')">📨 Enviar Mensaje a Usuario</div>
+        <div class="admin-opt" onclick="openModal('broadcast-modal')">📢 Broadcast Global</div>
+        <div class="admin-opt" onclick="showToast('📜 Historial de mensajes admin','info')">📜 Historial Mensajes Admin</div>
+        <div class="admin-opt warning" onclick="showToast('🔔 Alerta enviada a todos','warning')">🔔 Alerta de Emergencia</div>
+        <div class="admin-opt" onclick="showToast('📧 Email masivo preparado','info')">📧 Email Masivo</div>
+        <div class="admin-opt success" onclick="showToast('📣 Anuncio publicado','success')">📣 Anuncio en Plataforma</div>
+      </div>
+    </div>
+    <div class="admin-section">
+      <div class="admin-section-title">🚨 Reportes</div>
+      <div class="card">
+        <div class="flex gap-8 mb-12">
+          <div class="stat-card" style="flex:1;text-align:center"><div class="stat-val" style="color:var(--red)">47</div><div class="stat-lbl">Abiertos</div></div>
+          <div class="stat-card" style="flex:1;text-align:center"><div class="stat-val" style="color:var(--orange)">23</div><div class="stat-lbl">En revisión</div></div>
+          <div class="stat-card" style="flex:1;text-align:center"><div class="stat-val" style="color:var(--green)">312</div><div class="stat-lbl">Cerrados</div></div>
+        </div>
+        <table style="font-size:.78rem">
+          <thead><tr><th>ID</th><th>Tipo</th><th>Reportado</th><th>Motivo</th><th>Estado</th><th>Acción</th></tr></thead>
+          <tbody>
+            <tr><td>#4821</td><td>Usuario</td><td>DarkWizard99</td><td>Lenguaje inapropiado</td><td><span class="status-badge status-pending">Pendiente</span></td><td><div class="action-btns"><button class="btn btn-sm btn-danger" onclick="showToast('🔨 Usuario baneado','success')">Banear</button><button class="btn btn-sm btn-ghost" onclick="showToast('✅ Reporte cerrado','info')">Cerrar</button></div></td></tr>
+            <tr><td>#4820</td><td>Juego</td><td>HackCity_v2</td><td>Contenido inapropiado</td><td><span class="status-badge status-pending">Pendiente</span></td><td><div class="action-btns"><button class="btn btn-sm btn-danger" onclick="showToast('🗑 Juego eliminado','success')">Eliminar</button><button class="btn btn-sm btn-ghost" onclick="showToast('✅ Reporte cerrado','info')">Cerrar</button></div></td></tr>
+            <tr><td>#4819</td><td>Chat</td><td>SpamBot_x</td><td>Spam masivo</td><td><span class="status-badge" style="background:rgba(79,143,255,.15);color:var(--accent);border:1px solid rgba(79,143,255,.3)">En revisión</span></td><td><div class="action-btns"><button class="btn btn-sm btn-warning" onclick="showToast('🔇 Usuario silenciado','success')">Silenciar</button></div></td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+
+  <!-- ECONOMY TAB -->
+  <div id="admin-economy" style="display:none">
+    <div class="admin-section">
+      <div class="admin-section-title">🧱 Gestión de Bricks</div>
+      <div class="admin-grid">
+        <div class="admin-opt success" onclick="openModal('give-bricks-modal')">💰 Dar Bricks a Usuario</div>
+        <div class="admin-opt danger" onclick="openModal('remove-bricks-modal')">🗑 Quitar Bricks</div>
+        <div class="admin-opt" onclick="showToast('📊 Auditoría en progreso','info')">🔍 Auditar Economía</div>
+        <div class="admin-opt gold" onclick="showToast('🎉 Evento 2x activado','success')">🎉 Activar Evento 2x Bricks</div>
+        <div class="admin-opt danger" onclick="showToast('❄️ Cuenta congelada','warning')">❄️ Congelar Cuenta</div>
+        <div class="admin-opt" onclick="showToast('📋 Transacciones exportadas','info')">📋 Exportar Transacciones</div>
+        <div class="admin-opt" onclick="showToast('💳 Transacción revertida','warning')">↩️ Revertir Transacción</div>
+        <div class="admin-opt" onclick="showToast('🏦 Banco de Bricks: 892,340','info')">🏦 Ver Banco Global</div>
+        <div class="admin-opt warning" onclick="showToast('📉 Deflación aplicada','warning')">📉 Ajuste de Inflación</div>
+        <div class="admin-opt success" onclick="showToast('🎁 Bricks distribuidos','success')">🎁 Bonus a Todos los Usuarios</div>
+        <div class="admin-opt" onclick="showToast('🔒 Límite de transacciones','info')">🔒 Límites de Transacción</div>
+        <div class="admin-opt gold" onclick="showToast('💎 Items raros generados','success')">💎 Generar Items Raros</div>
+      </div>
+    </div>
+    <div class="admin-section">
+      <div class="admin-section-title">📊 Historial de Transacciones</div>
+      <div class="card">
+        <div class="flex gap-8 mb-12">
+          <input class="form-input" style="width:200px" placeholder="Buscar usuario...">
+          <select class="form-select" style="width:140px"><option>Todos los tipos</option><option>Compra</option><option>Venta</option><option>Bonus</option><option>Sanción</option></select>
+          <button class="btn btn-ghost btn-sm" onclick="showToast('📋 CSV exportado','success')">Exportar</button>
+        </div>
+        <table style="font-size:.78rem"><thead><tr><th>ID</th><th>Usuario</th><th>Tipo</th><th>Monto</th><th>Motivo</th><th>Fecha</th></tr></thead><tbody>
+          <tr><td>#TX8821</td><td>PixelBuilder_X</td><td>Bonus</td><td><span style="color:var(--green)">+50 🧱</span></td><td>Login diario</td><td>Hoy 09:14</td></tr>
+          <tr><td>#TX8820</td><td>UrbanCrafter</td><td>Compra</td><td><span style="color:var(--red)">-200 🧱</span></td><td>Compra en tienda</td><td>Hoy 08:55</td></tr>
+          <tr><td>#TX8819</td><td>DarkWizard99</td><td>Sanción</td><td><span style="color:var(--red)">-500 🧱</span></td><td>Trampa detectada</td><td>Ayer 22:30</td></tr>
+          <tr><td>#TX8818</td><td>NightStar_Pro</td><td>Venta</td><td><span style="color:var(--green)">+1200 🧱</span></td><td>Venta de item limitado</td><td>Ayer 19:00</td></tr>
+        </tbody></table>
+      </div>
+    </div>
+  </div>
+
+  <!-- CONTENT TAB -->
+  <div id="admin-content" style="display:none">
+    <div class="admin-section">
+      <div class="admin-section-title">🎮 Gestión de Juegos</div>
+      <div class="admin-grid">
+        <div class="admin-opt gold" onclick="showToast('⭐ Juego destacado','success')">⭐ Destacar Juego</div>
+        <div class="admin-opt danger" onclick="showToast('🗑 Juego eliminado','warning')">🗑 Eliminar Juego</div>
+        <div class="admin-opt warning" onclick="showToast('⏸ Juego suspendido','warning')">⏸ Suspender Juego</div>
+        <div class="admin-opt success" onclick="showToast('✅ Juego verificado','success')">✅ Verificar Juego</div>
+        <div class="admin-opt" onclick="showToast('📊 Stats del juego','info')">📊 Ver Estadísticas</div>
+        <div class="admin-opt" onclick="showToast('📋 Logs del servidor','info')">📋 Ver Logs Servidor</div>
+        <div class="admin-opt" onclick="showToast('🔞 Rating aplicado','warning')">🔞 Cambiar Clasificación</div>
+        <div class="admin-opt" onclick="showToast('🔗 URL copiada','info')">🔗 Copiar Enlace Admin</div>
+        <div class="admin-opt warning" onclick="showToast('🔒 Juego privado','info')">🔒 Forzar Privado</div>
+      </div>
+    </div>
+    <div class="admin-section">
+      <div class="admin-section-title">💬 Gestión del Foro</div>
+      <div class="admin-grid">
+        <div class="admin-opt danger" onclick="showToast('🗑 Post eliminado','warning')">🗑 Eliminar Post</div>
+        <div class="admin-opt" onclick="showToast('📌 Post fijado','success')">📌 Fijar Post</div>
+        <div class="admin-opt warning" onclick="showToast('🔒 Thread bloqueado','warning')">🔒 Bloquear Thread</div>
+        <div class="admin-opt" onclick="showToast('📂 Post movido','info')">📂 Mover Categoría</div>
+        <div class="admin-opt success" onclick="showToast('✅ Post aprobado','success')">✅ Aprobar Post</div>
+        <div class="admin-opt" onclick="showToast('📋 Categorías gestionadas','info')">📋 Gestionar Categorías</div>
+        <div class="admin-opt" onclick="showToast('🏷 Etiquetas actualizadas','info')">🏷 Gestionar Etiquetas</div>
+        <div class="admin-opt danger" onclick="showToast('🗑 Comentario eliminado','warning')">🗑 Eliminar Comentario</div>
+      </div>
+    </div>
+    <div class="admin-section">
+      <div class="admin-section-title">🛍 Gestión de Tienda</div>
+      <div class="admin-grid">
+        <div class="admin-opt success" onclick="showToast('✅ Item creado','success')">✅ Crear Item</div>
+        <div class="admin-opt danger" onclick="showToast('🗑 Item eliminado','warning')">🗑 Eliminar Item</div>
+        <div class="admin-opt" onclick="showToast('💰 Precio actualizado','info')">💰 Modificar Precio</div>
+        <div class="admin-opt gold" onclick="showToast('🔥 Item limitado activado','success')">🔥 Activar Item Limitado</div>
+        <div class="admin-opt" onclick="showToast('📊 Stats de tienda','info')">📊 Ver Ventas</div>
+        <div class="admin-opt warning" onclick="showToast('⏸ Item suspendido','warning')">⏸ Suspender Item</div>
+        <div class="admin-opt" onclick="showToast('🏷 Categorías actualizadas','info')">🏷 Gestionar Categorías</div>
+        <div class="admin-opt success" onclick="showToast('🎁 Promoción activada','success')">🎁 Crear Promoción</div>
+        <div class="admin-opt" onclick="showToast('📋 Inventario exportado','info')">📋 Exportar Inventario</div>
+      </div>
+    </div>
+    <div class="admin-section">
+      <div class="admin-section-title">🛡 Gestión de Gremios</div>
+      <div class="admin-grid">
+        <div class="admin-opt danger" onclick="showToast('🗑 Gremio disuelto','warning')">🗑 Disolver Gremio</div>
+        <div class="admin-opt warning" onclick="showToast('⏸ Gremio suspendido','warning')">⏸ Suspender Gremio</div>
+        <div class="admin-opt success" onclick="showToast('✅ Gremio verificado','success')">✅ Verificar Gremio</div>
+        <div class="admin-opt gold" onclick="showToast('🏆 Torneo creado','success')">🏆 Crear Torneo</div>
+        <div class="admin-opt" onclick="showToast('📊 Stats del gremio','info')">📊 Ver Estadísticas</div>
+        <div class="admin-opt" onclick="showToast('👤 Miembro expulsado','warning')">👤 Expulsar Miembro</div>
+      </div>
+    </div>
+    <div class="admin-section">
+      <div class="admin-section-title">📢 Anuncios y Comunicados</div>
+      <div class="card mb-12">
+        <div class="fw-700 mb-12">Crear Nuevo Anuncio</div>
+        <div class="form-group"><div class="form-label">Título del Anuncio</div><input class="form-input" placeholder="Título del anuncio..."></div>
+        <div class="form-group"><div class="form-label">Contenido</div><textarea class="form-textarea" placeholder="Escribe el anuncio aquí..."></textarea></div>
+        <div class="grid2 mb-12">
+          <div class="form-group"><div class="form-label">Tipo</div><select class="form-select"><option>Informativo</option><option>Advertencia</option><option>Evento</option><option>Actualización</option></select></div>
+          <div class="form-group"><div class="form-label">Audiencia</div><select class="form-select"><option>Todos los usuarios</option><option>Solo Plus</option><option>Solo admins</option></select></div>
+        </div>
+        <button class="btn btn-primary btn-sm" onclick="showToast('📢 Anuncio publicado','success')">📢 Publicar Anuncio</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- SYSTEM TAB -->
+  <div id="admin-system" style="display:none">
+    <div class="admin-section">
+      <div class="admin-section-title">⚙️ Control del Servidor</div>
+      <div class="admin-grid">
+        <div class="admin-opt warning" onclick="showToast('🔧 Modo mantenimiento activado','warning')">🔧 Modo Mantenimiento</div>
+        <div class="admin-opt success" onclick="showToast('💾 Backup iniciado','success')">💾 Crear Backup</div>
+        <div class="admin-opt" onclick="showToast('🗑 Caché limpiado','success')">🗑 Limpiar Caché</div>
+        <div class="admin-opt" onclick="showToast('📊 Métricas del servidor','info')">📊 Métricas Servidor</div>
+        <div class="admin-opt danger" onclick="showToast('⚠️ Reinicio programado','warning')">🔄 Reiniciar Servicio</div>
+        <div class="admin-opt" onclick="showToast('📋 Config actualizada','success')">📋 Ver Config Global</div>
+        <div class="admin-opt warning" onclick="showToast('⚠️ CDN vaciado','warning')">🌐 Vaciar CDN</div>
+        <div class="admin-opt success" onclick="showToast('✅ SSL renovado','success')">🔒 Renovar SSL</div>
+        <div class="admin-opt" onclick="showToast('📡 API status: OK','success')">📡 Status de API</div>
+        <div class="admin-opt danger" onclick="showToast('🚨 DDoS mitigation activado','warning')">🚨 Activar Anti-DDoS</div>
+        <div class="admin-opt" onclick="showToast('🔍 Logs de errores','info')">🔍 Ver Errores</div>
+        <div class="admin-opt success" onclick="showToast('🚀 Deploy completado','success')">🚀 Deploy de Actualización</div>
+      </div>
+    </div>
+    <div class="admin-section">
+      <div class="admin-section-title">📝 Logs del Sistema en Tiempo Real</div>
+      <div class="flex gap-8 mb-8">
+        <select class="form-select" style="width:140px"><option>Todos</option><option>INFO</option><option>WARN</option><option>ERROR</option></select>
+        <button class="btn btn-ghost btn-sm" onclick="clearLogs()">🗑 Limpiar</button>
+        <button class="btn btn-ghost btn-sm" onclick="showToast('📋 Logs exportados','success')">💾 Exportar</button>
+      </div>
+      <div class="log-terminal" id="log-terminal"></div>
+    </div>
+  </div>
+
+  <!-- ANALYTICS TAB -->
+  <div id="admin-analytics" style="display:none">
+    <div class="grid4 mb-16">
+      <div class="stat-card"><div class="stat-val" style="color:var(--accent)">68%</div><div class="stat-lbl">Tasa de Retención</div><div class="stat-change stat-up">▲ +3.2%</div></div>
+      <div class="stat-card"><div class="stat-val" style="color:var(--green)">24m 30s</div><div class="stat-lbl">Tiempo Promedio/Sesión</div><div class="stat-change stat-up">▲ +5%</div></div>
+      <div class="stat-card"><div class="stat-val" style="color:var(--gold)">$12.4K</div><div class="stat-lbl">Ingresos Este Mes</div><div class="stat-change stat-up">▲ +18%</div></div>
+      <div class="stat-card"><div class="stat-val" style="color:var(--purple)">4.2</div><div class="stat-lbl">Valoración Media</div><div class="stat-change stat-up">▲ +0.3</div></div>
+    </div>
+    <div class="grid2">
+      <div class="card">
+        <div class="fw-700 mb-12">Nuevos Usuarios — 30 días</div>
+        <div class="analytics-bar" id="analytics-chart1"></div>
+      </div>
+      <div class="card">
+        <div class="fw-700 mb-12">Bricks Gastados — 30 días</div>
+        <div class="analytics-bar" id="analytics-chart2"></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ALL OPTIONS TAB -->
+  <div id="admin-all-options" style="display:none">
+    <div style="font-size:.8rem;color:var(--text2);margin-bottom:16px">Todas las opciones disponibles del panel de administración organizadas por categoría.</div>
+    <div id="all-options-content"></div>
+  </div>
+</div>
+
+</main>
+
+<!-- MODALS -->
+<div class="modal-overlay" id="modal-overlay" style="display:none" onclick="if(event.target===this)closeModal()">
+
+  <!-- BAN MODAL -->
+  <div class="modal" id="ban-modal" style="display:none">
+    <div class="modal-header"><div class="modal-title" style="color:var(--red)">🔨 Banear Usuario</div><div class="modal-close" onclick="closeModal()">✕</div></div>
+    <div class="modal-body">
+      <div class="form-group"><div class="form-label">Usuario</div><input class="form-input" placeholder="Nombre de usuario..."></div>
+      <div class="form-group"><div class="form-label">Tipo de Ban</div><select class="form-select"><option>Permanente</option><option>Temporal</option><option>Solo chat</option><option>Solo creación</option></select></div>
+      <div class="form-group"><div class="form-label">Motivo</div><select class="form-select"><option>Trampa / Hacks</option><option>Lenguaje inapropiado</option><option>Acoso</option><option>Spam</option><option>Contenido ilegal</option><option>Violación de TOS</option><option>Otro</option></select></div>
+      <div class="form-group"><div class="form-label">Notas adicionales (opcional)</div><textarea class="form-textarea" placeholder="Detalles del ban..."></textarea></div>
+      <div class="form-group"><div class="form-label">Acciones adicionales</div>
+        <div style="display:flex;flex-direction:column;gap:8px;margin-top:4px">
+          <label style="display:flex;align-items:center;gap:8px;font-size:.82rem;cursor:pointer"><input type="checkbox"> Borrar todos los posts del usuario</label>
+          <label style="display:flex;align-items:center;gap:8px;font-size:.82rem;cursor:pointer"><input type="checkbox"> Congelar Bricks del usuario</label>
+          <label style="display:flex;align-items:center;gap:8px;font-size:.82rem;cursor:pointer"><input type="checkbox"> Notificar al usuario por email</label>
+          <label style="display:flex;align-items:center;gap:8px;font-size:.82rem;cursor:pointer"><input type="checkbox"> Banear también por IP</label>
+        </div>
+      </div>
+      <div class="modal-footer"><button class="btn btn-ghost btn-sm" onclick="closeModal()">Cancelar</button><button class="btn btn-danger btn-sm" onclick="showToast('🔨 Usuario baneado exitosamente','success');closeModal()">🔨 Confirmar Ban</button></div>
+    </div>
+  </div>
+
+  <!-- UNBAN MODAL -->
+  <div class="modal" id="unban-modal" style="display:none">
+    <div class="modal-header"><div class="modal-title" style="color:var(--green)">✅ Levantar Ban</div><div class="modal-close" onclick="closeModal()">✕</div></div>
+    <div class="modal-body">
+      <div class="form-group"><div class="form-label">Usuario Baneado</div><input class="form-input" placeholder="Nombre de usuario..."></div>
+      <div class="form-group"><div class="form-label">Motivo del Levantamiento</div><select class="form-select"><option>Apelación aprobada</option><option>Error de moderación</option><option>Rehabilitación</option><option>Decisión administrativa</option></select></div>
+      <div class="form-group"><div class="form-label">Notas</div><textarea class="form-textarea" placeholder="Razones para levantar el ban..."></textarea></div>
+      <div class="modal-footer"><button class="btn btn-ghost btn-sm" onclick="closeModal()">Cancelar</button><button class="btn btn-success btn-sm" onclick="showToast('✅ Ban levantado exitosamente','success');closeModal()">✅ Levantar Ban</button></div>
+    </div>
+  </div>
+
+  <!-- TEMP BAN MODAL -->
+  <div class="modal" id="tempban-modal" style="display:none">
+    <div class="modal-header"><div class="modal-title" style="color:var(--orange)">⏱ Ban Temporal</div><div class="modal-close" onclick="closeModal()">✕</div></div>
+    <div class="modal-body">
+      <div class="form-group"><div class="form-label">Usuario</div><input class="form-input" placeholder="Nombre de usuario..."></div>
+      <div class="form-group"><div class="form-label">Duración</div><select class="form-select"><option>1 hora</option><option>6 horas</option><option>24 horas</option><option>3 días</option><option>7 días</option><option>14 días</option><option>30 días</option><option>90 días</option></select></div>
+      <div class="form-group"><div class="form-label">Motivo</div><select class="form-select"><option>Primera infracción</option><option>Spam leve</option><option>Lenguaje ofensivo</option><option>Comportamiento tóxico</option><option>Otro</option></select></div>
+      <div class="modal-footer"><button class="btn btn-ghost btn-sm" onclick="closeModal()">Cancelar</button><button class="btn btn-warning btn-sm" onclick="showToast('⏱ Ban temporal aplicado','success');closeModal()">⏱ Aplicar Ban</button></div>
+    </div>
+  </div>
+
+  <!-- IP BAN MODAL -->
+  <div class="modal" id="ipban-modal" style="display:none">
+    <div class="modal-header"><div class="modal-title" style="color:var(--red)">🌐 Ban por IP</div><div class="modal-close" onclick="closeModal()">✕</div></div>
+    <div class="modal-body">
+      <div class="form-group"><div class="form-label">Dirección IP o Usuario</div><input class="form-input" placeholder="192.168.x.x o @usuario"></div>
+      <div class="form-group"><div class="form-label">Rango</div><select class="form-select"><option>IP exacta</option><option>Subred /24</option><option>País completo</option></select></div>
+      <div class="form-group"><div class="form-label">Duración</div><select class="form-select"><option>Permanente</option><option>7 días</option><option>30 días</option></select></div>
+      <div class="form-group"><div class="form-label">Motivo</div><textarea class="form-textarea" placeholder="Razón del ban por IP..."></textarea></div>
+      <div class="modal-footer"><button class="btn btn-ghost btn-sm" onclick="closeModal()">Cancelar</button><button class="btn btn-danger btn-sm" onclick="showToast('🌐 IP baneada','success');closeModal()">🌐 Banear IP</button></div>
+    </div>
+  </div>
+
+  <!-- WARN MODAL -->
+  <div class="modal" id="warn-modal" style="display:none">
+    <div class="modal-header"><div class="modal-title" style="color:var(--orange)">⚠️ Advertir Usuario</div><div class="modal-close" onclick="closeModal()">✕</div></div>
+    <div class="modal-body">
+      <div class="form-group"><div class="form-label">Usuario</div><input class="form-input" placeholder="Nombre de usuario..."></div>
+      <div class="form-group"><div class="form-label">Nivel de Advertencia</div><select class="form-select"><option>⚠️ Leve — Primera advertencia</option><option>🟠 Moderado — Segunda advertencia</option><option>🔴 Grave — Última advertencia antes del ban</option></select></div>
+      <div class="form-group"><div class="form-label">Mensaje al Usuario</div><textarea class="form-textarea" placeholder="Escribe el mensaje de advertencia..."></textarea></div>
+      <div class="modal-footer"><button class="btn btn-ghost btn-sm" onclick="closeModal()">Cancelar</button><button class="btn btn-warning btn-sm" onclick="showToast('⚠️ Advertencia enviada al usuario','success');closeModal()">⚠️ Enviar Advertencia</button></div>
+    </div>
+  </div>
+
+  <!-- MUTE MODAL -->
+  <div class="modal" id="mute-modal" style="display:none">
+    <div class="modal-header"><div class="modal-title">🔇 Silenciar Usuario</div><div class="modal-close" onclick="closeModal()">✕</div></div>
+    <div class="modal-body">
+      <div class="form-group"><div class="form-label">Usuario</div><input class="form-input" placeholder="Nombre de usuario..."></div>
+      <div class="form-group"><div class="form-label">Alcance</div><select class="form-select"><option>Chat global</option><option>Solo foro</option><option>Solo mensajes directos</option><option>Comentarios de juegos</option></select></div>
+      <div class="form-group"><div class="form-label">Duración</div><select class="form-select"><option>1 hora</option><option>24 horas</option><option>7 días</option><option>Permanente</option></select></div>
+      <div class="modal-footer"><button class="btn btn-ghost btn-sm" onclick="closeModal()">Cancelar</button><button class="btn btn-primary btn-sm" onclick="showToast('🔇 Usuario silenciado','success');closeModal()">🔇 Silenciar</button></div>
+    </div>
+  </div>
+
+  <!-- VERIFY MODAL -->
+  <div class="modal" id="verify-modal" style="display:none">
+    <div class="modal-header"><div class="modal-title" style="color:var(--accent)">✔ Verificar Usuario</div><div class="modal-close" onclick="closeModal()">✕</div></div>
+    <div class="modal-body">
+      <div class="form-group"><div class="form-label">Usuario</div><input class="form-input" placeholder="Nombre de usuario..."></div>
+      <div class="form-group"><div class="form-label">Tipo de Verificación</div><select class="form-select"><option>✔ Verificado (General)</option><option>⭐ Creador Destacado</option><option>🎮 Desarrollador Oficial</option><option>🏆 Jugador Élite</option><option>📰 Medio/Prensa</option></select></div>
+      <div class="form-group"><div class="form-label">Notas internas</div><textarea class="form-textarea" placeholder="Razón de la verificación..."></textarea></div>
+      <div class="modal-footer"><button class="btn btn-ghost btn-sm" onclick="closeModal()">Cancelar</button><button class="btn btn-primary btn-sm" onclick="showToast('✔ Usuario verificado exitosamente','success');closeModal()">✔ Verificar</button></div>
+    </div>
+  </div>
+
+  <!-- UNVERIFY MODAL -->
+  <div class="modal" id="unverify-modal" style="display:none">
+    <div class="modal-header"><div class="modal-title" style="color:var(--red)">✖ Quitar Verificación</div><div class="modal-close" onclick="closeModal()">✕</div></div>
+    <div class="modal-body">
+      <div class="form-group"><div class="form-label">Usuario</div><input class="form-input" placeholder="Nombre de usuario..."></div>
+      <div class="form-group"><div class="form-label">Motivo</div><select class="form-select"><option>Abuso de la insignia</option><option>Información falsa</option><option>Solicitud del usuario</option><option>Inactividad prolongada</option><option>Otro</option></select></div>
+      <div class="form-group"><div class="form-label">Notas</div><textarea class="form-textarea" placeholder="Detalles del retiro de verificación..."></textarea></div>
+      <div class="modal-footer"><button class="btn btn-ghost btn-sm" onclick="closeModal()">Cancelar</button><button class="btn btn-danger btn-sm" onclick="showToast('✖ Verificación retirada','warning');closeModal()">✖ Quitar Verificación</button></div>
+    </div>
+  </div>
+
+  <!-- MSG MODAL -->
+  <div class="modal" id="msg-modal" style="display:none">
+    <div class="modal-header"><div class="modal-title">📨 Mensaje Oficial Admin</div><div class="modal-close" onclick="closeModal()">✕</div></div>
+    <div class="modal-body">
+      <div class="form-group"><div class="form-label">Destinatario</div><input class="form-input" placeholder="Usuario o @todos..."></div>
+      <div class="form-group"><div class="form-label">Asunto</div><input class="form-input" placeholder="Asunto del mensaje..."></div>
+      <div class="form-group"><div class="form-label">Tipo de Mensaje</div><select class="form-select"><option>📨 Mensaje privado oficial</option><option>⚠️ Advertencia formal</option><option>🎉 Felicitación</option><option>📋 Recordatorio de normas</option><option>🔔 Notificación especial</option></select></div>
+      <div class="form-group"><div class="form-label">Mensaje</div><textarea class="form-textarea" style="min-height:120px" placeholder="Escribe tu mensaje oficial aquí..."></textarea></div>
+      <div class="modal-footer"><button class="btn btn-ghost btn-sm" onclick="closeModal()">Cancelar</button><button class="btn btn-primary btn-sm" onclick="showToast('📨 Mensaje oficial enviado','success');closeModal()">📨 Enviar Mensaje</button></div>
+    </div>
+  </div>
+
+  <!-- BROADCAST MODAL -->
+  <div class="modal" id="broadcast-modal" style="display:none">
+    <div class="modal-header"><div class="modal-title">📢 Broadcast Global</div><div class="modal-close" onclick="closeModal()">✕</div></div>
+    <div class="modal-body">
+      <div class="form-group"><div class="form-label">Tipo de Alerta</div><select class="form-select"><option>📢 Anuncio general</option><option>⚠️ Alerta de mantenimiento</option><option>🎉 Evento especial</option><option>🚨 Alerta de emergencia</option></select></div>
+      <div class="form-group"><div class="form-label">Mensaje</div><textarea class="form-textarea" placeholder="Mensaje que verán TODOS los usuarios..."></textarea></div>
+      <div class="form-group"><div class="form-label">Duración de la alerta</div><select class="form-select"><option>30 minutos</option><option>1 hora</option><option>Hasta nuevo aviso</option></select></div>
+      <div class="modal-footer"><button class="btn btn-ghost btn-sm" onclick="closeModal()">Cancelar</button><button class="btn btn-danger btn-sm" onclick="showToast('📢 Broadcast enviado a todos los usuarios','success');closeModal()">📢 Enviar a Todos</button></div>
+    </div>
+  </div>
+
+  <!-- GIVE BRICKS MODAL -->
+  <div class="modal" id="give-bricks-modal" style="display:none">
+    <div class="modal-header"><div class="modal-title" style="color:var(--gold)">💰 Dar Bricks</div><div class="modal-close" onclick="closeModal()">✕</div></div>
+    <div class="modal-body">
+      <div class="form-group"><div class="form-label">Usuario</div><input class="form-input" placeholder="Nombre de usuario..."></div>
+      <div class="form-group"><div class="form-label">Cantidad de Bricks</div><input class="form-input" type="number" placeholder="Ej: 500" min="1"></div>
+      <div class="form-group"><div class="form-label">Motivo</div><select class="form-select"><option>Compensación por error</option><option>Premio de evento</option><option>Recompensa de beta</option><option>Corrección de bug</option><option>Donación especial</option><option>Otro</option></select></div>
+      <div class="form-group"><div class="form-label">Notas internas</div><textarea class="form-textarea" placeholder="Notas para el registro de auditoría..."></textarea></div>
+      <div class="modal-footer"><button class="btn btn-ghost btn-sm" onclick="closeModal()">Cancelar</button><button class="btn btn-gold btn-sm" onclick="showToast('💰 Bricks asignados exitosamente','success');closeModal()">💰 Dar Bricks</button></div>
+    </div>
+  </div>
+
+  <!-- REMOVE BRICKS MODAL -->
+  <div class="modal" id="remove-bricks-modal" style="display:none">
+    <div class="modal-header"><div class="modal-title" style="color:var(--red)">🗑 Quitar Bricks</div><div class="modal-close" onclick="closeModal()">✕</div></div>
+    <div class="modal-body">
+      <div class="form-group"><div class="form-label">Usuario</div><input class="form-input" placeholder="Nombre de usuario..."></div>
+      <div class="form-group"><div class="form-label">Cantidad</div><input class="form-input" type="number" placeholder="Ej: 200" min="1"></div>
+      <div class="form-group"><div class="form-label">Motivo</div><select class="form-select"><option>Trampa detectada</option><option>Explotación de bug</option><option>Comercio ilícito</option><option>Corrección de error</option><option>Otro</option></select></div>
+      <div class="modal-footer"><button class="btn btn-ghost btn-sm" onclick="closeModal()">Cancelar</button><button class="btn btn-danger btn-sm" onclick="showToast('🗑 Bricks removidos','warning');closeModal()">🗑 Quitar Bricks</button></div>
+    </div>
+  </div>
+
+  <!-- NEW POST MODAL -->
+  <div class="modal" id="new-post-modal" style="display:none">
+    <div class="modal-header"><div class="modal-title">✏️ Nuevo Post</div><div class="modal-close" onclick="closeModal()">✕</div></div>
+    <div class="modal-body">
+      <div class="form-group"><div class="form-label">Título</div><input class="form-input" placeholder="Título del post..."></div>
+      <div class="form-group"><div class="form-label">Categoría</div><select class="form-select"><option>General</option><option>Construcción</option><option>Scripting</option><option>Sugerencias</option><option>Showcase</option></select></div>
+      <div class="form-group"><div class="form-label">Contenido</div><textarea class="form-textarea" style="min-height:120px" placeholder="Escribe tu post..."></textarea></div>
+      <div class="modal-footer"><button class="btn btn-ghost btn-sm" onclick="closeModal()">Cancelar</button><button class="btn btn-primary btn-sm" onclick="showToast('✅ Post publicado exitosamente','success');closeModal()">Publicar</button></div>
+    </div>
+  </div>
+
+  <!-- CREATE GUILD MODAL -->
+  <div class="modal" id="create-guild-modal" style="display:none">
+    <div class="modal-header"><div class="modal-title">🛡 Crear Gremio</div><div class="modal-close" onclick="closeModal()">✕</div></div>
+    <div class="modal-body">
+      <div style="background:rgba(245,200,66,.1);border:1px solid rgba(245,200,66,.3);border-radius:8px;padding:10px;margin-bottom:14px;font-size:.8rem;color:var(--gold)">⚠️ Crear un gremio cuesta <b>500 Bricks</b></div>
+      <div class="form-group"><div class="form-label">Nombre del Gremio</div><input class="form-input" placeholder="Nombre del gremio..."></div>
+      <div class="form-group"><div class="form-label">Descripción</div><textarea class="form-textarea" placeholder="Describe tu gremio..."></textarea></div>
+      <div class="form-group"><div class="form-label">Tipo</div><select class="form-select"><option>Público</option><option>Solo por invitación</option><option>Cerrado</option></select></div>
+      <div class="form-group"><div class="form-label">Enfoque</div><select class="form-select"><option>Construcción</option><option>Competitivo</option><option>Social</option><option>RPG</option><option>General</option></select></div>
+      <div class="modal-footer"><button class="btn btn-ghost btn-sm" onclick="closeModal()">Cancelar</button><button class="btn btn-primary btn-sm" onclick="showToast('🛡 Gremio creado — 500 Bricks descontados','success');closeModal()">🛡 Crear Gremio (-500 🧱)</button></div>
+    </div>
+  </div>
+
+</div>
+
+<!-- TOAST CONTAINER -->
+<div class="toast-container" id="toast-container"></div>
+
+<script>
+// ============ DATA ============
+const GAMES = [
+  {id:1,name:'UrbanCraft',emoji:'🏙',players:'12.4K',rating:'4.9',cat:'building',color:'#1a2f4a',badge:'Popular'},
+  {id:2,name:'Dragon Quest',emoji:'🐉',players:'8.2K',rating:'4.7',cat:'rpg',color:'#2a1a3a',badge:'RPG'},
+  {id:3,name:'Speed Rivals',emoji:'🏎',players:'6.8K',rating:'4.6',cat:'race',color:'#1a3a2a',badge:'Carreras'},
+  {id:4,name:'SkyFort Wars',emoji:'🏰',players:'9.1K',rating:'4.8',cat:'action',color:'#2a2a1a',badge:'Acción'},
+  {id:5,name:'Social City',emoji:'🌆',players:'14.2K',rating:'4.9',cat:'social',color:'#1a2a3a',badge:'Social'},
+  {id:6,name:'Pixel Dungeon',emoji:'⚔️',players:'5.4K',rating:'4.5',cat:'rpg',color:'#3a1a1a',badge:'RPG'},
+  {id:7,name:'Brick Kingdom',emoji:'🧱',players:'7.7K',rating:'4.7',cat:'building',color:'#1a3a3a',badge:'Building'},
+  {id:8,name:'Mecha Wars',emoji:'🤖',players:'11.3K',rating:'4.8',cat:'action',color:'#1a1a3a',badge:'Acción'},
+  {id:9,name:'Ocean Paradise',emoji:'🌊',players:'4.9K',rating:'4.4',cat:'social',color:'#0d2040',badge:'Social'},
+  {id:10,name:'Galaxy Racer',emoji:'🚀',players:'3.2K',rating:'4.3',cat:'race',color:'#0d0d2a',badge:'Nuevo'},
+  {id:11,name:'Crystal Mines',emoji:'💎',players:'2.8K',rating:'4.5',cat:'building',color:'#1a0d2a',badge:'Nuevo'},
+  {id:12,name:'Ninja Trials',emoji:'🥷',players:'6.1K',rating:'4.6',cat:'action',color:'#0d1a0d',badge:'Nuevo'},
+];
+const SHOP = [
+  {id:1,name:'Sombrero Cyberpunk',emoji:'🎩',price:150,cat:'hats',limited:false,color:'#1a1a2a'},
+  {id:2,name:'Cara Ninja',emoji:'😏',price:80,cat:'faces',limited:false,color:'#1a2a1a'},
+  {id:3,name:'Chaqueta Neon',emoji:'🧥',price:220,cat:'clothes',limited:false,color:'#2a1a1a'},
+  {id:4,name:'Alas de Dragón',emoji:'🦋',price:450,cat:'accessories',limited:true,color:'#2a1a2a'},
+  {id:5,name:'Corona Dorada',emoji:'👑',price:800,cat:'hats',limited:true,color:'#2a200a'},
+  {id:6,name:'Máscara Oni',emoji:'👹',price:320,cat:'faces',limited:false,color:'#2a0a0a'},
+  {id:7,name:'Traje Espacial',emoji:'👨‍🚀',price:600,cat:'clothes',limited:true,color:'#0a1a2a'},
+  {id:8,name:'Espada Rúnica',emoji:'⚔️',price:380,cat:'accessories',limited:false,color:'#1a0a2a'},
+  {id:9,name:'Sombrero Pirata',emoji:'🏴‍☠️',price:120,cat:'hats',limited:false,color:'#1a0d0d'},
+  {id:10,name:'Cara Robótica',emoji:'🤖',price:250,cat:'faces',limited:false,color:'#0d0d1a'},
+  {id:11,name:'Capa de Mago',emoji:'🧙',price:400,cat:'clothes',limited:false,color:'#1a0d2a'},
+  {id:12,name:'Jetpack Pro',emoji:'🚀',price:1200,cat:'accessories',limited:true,color:'#0d1a2a'},
+];
+const FORUM_POSTS = [
+  {user:'BuildMaster',av:'BM',avColor:'#4f8fff',title:'Guía definitiva: Cómo hacer edificios realistas en Polytoria',cat:'Construcción',replies:142,views:'4.2K',time:'hace 2h',tag:'Tutorial'},
+  {user:'ScriptKid_Pro',av:'SK',avColor:'#7c5cff',title:'Script para sistema de inventario persistente — open source',cat:'Scripting',replies:89,views:'2.8K',time:'hace 4h',tag:'Script'},
+  {user:'UrbanCrafter',av:'UC',avColor:'#00d4aa',title:'[SUGERENCIA] Añadir física de agua dinámica al engine',cat:'Sugerencias',replies:234,views:'8.1K',time:'hace 6h',tag:'Sugerencia'},
+  {user:'PixelKnight',av:'PK',avColor:'#f5c842',title:'Showcase: Mi ciudad medieval tardó 3 meses — ¡galería aquí!',cat:'Showcase',replies:312,views:'15K',time:'hace 8h',tag:'Showcase'},
+  {user:'NightStar_Pro',av:'NS',avColor:'#a855f7',title:'Pregunta: ¿Cómo optimizar renders con más de 500 partes?',cat:'General',replies:45,views:'1.3K',time:'hace 12h',tag:'Ayuda'},
+  {user:'DevStorm',av:'DS',avColor:'#f59e0b',title:'Bug report: los scripts locales no persisten tras reload',cat:'General',replies:28,views:'900',time:'hace 1d',tag:'Bug'},
+  {user:'LegacyBuilder',av:'LB',avColor:'#22c55e',title:'Historia de Polytoria: cómo creció la plataforma en 5 años',cat:'General',replies:167,views:'6.7K',time:'hace 2d',tag:'Historia'},
+];
+const GUILDS = [
+  {name:'Arquitectos del Mundo',icon:'🏛',members:1240,desc:'Los mejores constructores de la plataforma',color:'#1a2f4a',tag:'Construcción'},
+  {name:'Dragon Riders',icon:'🐉',members:890,desc:'Gremio de RPG y aventura competitiva',color:'#2a1a3a',tag:'RPG'},
+  {name:'Speed Devils',icon:'🏎',members:632,desc:'Para los amantes de las carreras',color:'#1a3a1a',tag:'Carreras'},
+  {name:'Pixel Warriors',icon:'⚔️',members:1580,desc:'Clan de acción y PvP del servidor',color:'#3a1a1a',tag:'Acción'},
+  {name:'Social Hub',icon:'🌆',members:2340,desc:'El gremio social más grande de Polytoria',color:'#1a2a3a',tag:'Social'},
+  {name:'Script Syndicate',icon:'💻',members:456,desc:'Comunidad de desarrolladores y scripters',color:'#1a1a3a',tag:'Scripting'},
+];
+const ACHIEVEMENTS = [
+  {name:'Primer Constructor',icon:'🏗️',desc:'Crea tu primer juego en Polytoria',progress:100,max:100,xp:100,bricks:50,color:'#4f8fff',done:true},
+  {name:'Explorador Social',icon:'🌍',desc:'Únete a 5 gremios diferentes',progress:3,max:5,xp:200,bricks:100,color:'#7c5cff',done:false},
+  {name:'Coleccionista',icon:'💎',desc:'Obtén 10 items del tipo Limitado',progress:4,max:10,xp:500,bricks:300,color:'#f5c842',done:false},
+  {name:'Veterano',icon:'🏆',desc:'Juega durante 365 días seguidos',progress:142,max:365,xp:1000,bricks:500,color:'#f59e0b',done:false},
+  {name:'Master Builder',icon:'🧱',desc:'Publica 10 juegos en la plataforma',progress:4,max:10,xp:800,bricks:400,color:'#00d4aa',done:false},
+  {name:'Leyenda del Foro',icon:'📜',desc:'Haz 500 posts en el foro',progress:89,max:500,xp:600,bricks:250,color:'#a855f7',done:false},
+  {name:'Millonario',icon:'💰',desc:'Acumula 10,000 Bricks en total',progress:2450,max:10000,xp:1500,bricks:1000,color:'#f5c842',done:false},
+  {name:'Primera Compra',icon:'🛍️',desc:'Compra tu primer item en la tienda',progress:100,max:100,xp:50,bricks:25,color:'#22c55e',done:true},
+];
+const USERS_ADMIN = [
+  {name:'PixelBuilder_X',av:'PX',avC:'#4f8fff',level:12,status:'active',verified:true,bricks:2450,joined:'Ene 2023',last:'hace 5 min'},
+  {name:'UrbanCrafter',av:'UC',avC:'#00d4aa',level:28,status:'active',verified:true,bricks:18400,joined:'Mar 2022',last:'hace 1h'},
+  {name:'DarkWizard99',av:'DW',avC:'#a855f7',level:8,status:'banned',verified:false,bricks:0,joined:'Jun 2023',last:'hace 3d'},
+  {name:'NightStar_Pro',av:'NS',avC:'#f5c842',level:45,status:'active',verified:true,bricks:54200,joined:'Dic 2021',last:'hace 30 min'},
+  {name:'ScriptKid_Pro',av:'SK',avC:'#7c5cff',level:19,status:'active',verified:false,bricks:3200,joined:'Sep 2023',last:'hace 2h'},
+  {name:'SpamBot_x',av:'SB',avC:'#ff4d6d',level:1,status:'banned',verified:false,bricks:0,joined:'Hoy',last:'hace 8h'},
+  {name:'LegacyBuilder',av:'LB',avC:'#22c55e',level:67,status:'active',verified:true,bricks:128900,joined:'Mar 2020',last:'hace 15 min'},
+  {name:'DevStorm',av:'DS',avC:'#f59e0b',level:34,status:'active',verified:false,bricks:7800,joined:'Jul 2022',last:'hace 4h'},
+];
+const MSGS = [
+  {user:'PixelKnight',av:'PK',avC:'#4f8fff',preview:'¡Hola! ¿Quieres unirte...', unread:2},
+  {user:'UrbanCrafter',av:'UC',avC:'#00d4aa',preview:'Mira mi nuevo build 🏗️', unread:0},
+  {user:'BuildMaster',av:'BM',avC:'#7c5cff',preview:'Tutorial listo para revisar', unread:0},
+  {user:'NightStar_Pro',av:'NS',avC:'#f5c842',preview:'¿Jugamos esta noche?', unread:1},
+  {user:'DevStorm',av:'DS',avC:'#f59e0b',preview:'Nuevo script disponible', unread:0},
+  {user:'LegacyBuilder',av:'LB',avC:'#22c55e',preview:'Te invito a mi gremio', unread:0},
+];
+
+let bricks = 2450;
+let currentModal = null;
+
+// ============ INIT ============
+function init() {
+  renderGames();
+  renderShop();
+  renderForum();
+  renderGuilds();
+  renderMessages();
+  renderAchievements();
+  renderCreator();
+  renderUsersTable();
+  renderCharts();
+  renderAllOptions();
+  renderLogs();
+  renderInventory();
+}
+
+// ============ NAVIGATE ============
+function navigate(page) {
+  document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));
+  document.querySelectorAll('.sidebar-item').forEach(i=>i.classList.remove('active'));
+  const el = document.getElementById('page-'+page);
+  if(el) el.classList.add('active');
+  const nav = document.getElementById('nav-'+page);
+  if(nav) nav.classList.add('active');
+  const notif = document.getElementById('notif-panel');
+  notif.classList.add('dropdown-hidden');
+  notif.classList.remove('dropdown-visible');
+}
+
+function toggleNotif() {
+  const p = document.getElementById('notif-panel');
+  p.classList.toggle('dropdown-hidden');
+  p.classList.toggle('dropdown-visible');
+}
+
+// ============ TABS ============
+function switchTab(section, tabName, el) {
+  const tabs = ['projects','templates','assets','editor','scripts'];
+  tabs.forEach(t=>{
+    const el2 = document.getElementById(section+'-'+t);
+    if(el2) el2.style.display='none';
+  });
+  const target = document.getElementById(section+'-'+tabName);
+  if(target) target.style.display='block';
+  el.closest('.tabs').querySelectorAll('.tab').forEach(t=>t.classList.remove('active'));
+  el.classList.add('active');
+}
+
+function switchAdminTab(tab, el) {
+  ['dashboard','users','moderation','economy','content','system','analytics','all-options'].forEach(t=>{
+    const el2 = document.getElementById('admin-'+t);
+    if(el2) el2.style.display='none';
+  });
+  const target = document.getElementById('admin-'+tab);
+  if(target) target.style.display='block';
+  el.closest('.tabs').querySelectorAll('.tab').forEach(t=>t.classList.remove('active'));
+  el.classList.add('active');
+  if(tab==='all-options') renderAllOptions();
+  if(tab==='system') renderLogs();
+  if(tab==='analytics') renderAnalyticsCharts();
+}
+
+function switchForumTab(cat, el) {
+  el.closest('.tabs').querySelectorAll('.tab').forEach(t=>t.classList.remove('active'));
+  el.classList.add('active');
+  renderForum(cat);
+}
+
+function filterGames(cat, el) {
+  el.closest('.tabs').querySelectorAll('.tab').forEach(t=>t.classList.remove('active'));
+  el.classList.add('active');
+  renderAllGames(cat);
+}
+
+function filterShop(cat, el) {
+  el.closest('.tabs').querySelectorAll('.tab').forEach(t=>t.classList.remove('active'));
+  el.classList.add('active');
+  renderShopGrid(cat);
+}
+
+// ============ RENDER GAMES ============
+function gameCard(g) {
+  return `<div class="game-card" onclick="showToast('🎮 Abriendo ${g.name}...','info')">
+    <div class="game-thumb" style="background:linear-gradient(135deg,${g.color},rgba(0,0,0,.5))">${g.emoji}</div>
+    <div class="game-info">
+      <div class="game-name">${g.name}</div>
+      <div class="game-meta"><span class="game-badge">${g.badge}</span> 👥 ${g.players} • ⭐ ${g.rating}</div>
+    </div>
+  </div>`;
+}
+
+function renderGames() {
+  document.getElementById('featured-games').innerHTML = GAMES.slice(0,4).map(gameCard).join('');
+  document.getElementById('new-games').innerHTML = GAMES.slice(8,12).map(gameCard).join('');
+  renderAllGames('all');
+}
+
+function renderAllGames(cat) {
+  const filtered = cat==='all' ? GAMES : GAMES.filter(g=>g.cat===cat);
+  const el = document.getElementById('all-games');
+  if(el) el.innerHTML = filtered.map(gameCard).join('') || '<div style="color:var(--text2);padding:20px">No se encontraron juegos en esta categoría</div>';
+}
+
+// ============ RENDER SHOP ============
+function renderShop() { renderShopGrid('all'); }
+function renderShopGrid(cat) {
+  const filtered = cat==='all' ? SHOP : cat==='limited' ? SHOP.filter(s=>s.limited) : SHOP.filter(s=>s.cat===cat);
+  const el = document.getElementById('shop-grid');
+  if(!el) return;
+  el.innerHTML = filtered.map(item=>`
+    <div class="shop-item" onclick="buyItem(${item.id},'${item.name}',${item.price})">
+      <div class="shop-thumb" style="background:linear-gradient(135deg,${item.color},rgba(0,0,0,.4))">${item.emoji}${item.limited?'<div class="shop-badge-lim">LIMITADO</div>':''}</div>
+      <div class="shop-info">
+        <div class="shop-name">${item.name}</div>
+        <div class="shop-price">🧱 ${item.price.toLocaleString()}</div>
+      </div>
+    </div>`).join('') || '<div style="color:var(--text2);padding:20px">No hay items en esta categoría</div>';
+}
+
+function buyItem(id, name, price) {
+  if(bricks >= price) {
+    bricks -= price;
+    document.querySelectorAll('.nav-bricks').forEach(el=>el.textContent='🧱 '+bricks.toLocaleString());
+    showToast(`✅ ¡Compraste "${name}" por ${price} Bricks!`,'success');
+  } else {
+    showToast(`❌ No tienes suficientes Bricks (necesitas ${price})`,'error');
+  }
+}
+
+// ============ RENDER FORUM ============
+function renderForum(cat) {
+  const tags = {general:'General',building:'Construcción',scripting:'Scripting',suggestions:'Sugerencias',showcase:'Showcase'};
+  const filtered = cat && cat!=='general' ? FORUM_POSTS.filter(p=>p.cat===tags[cat]) : FORUM_POSTS;
+  const el = document.getElementById('forum-posts');
+  if(!el) return;
+  el.innerHTML = (filtered.length ? filtered : FORUM_POSTS).map(p=>`
+    <div class="forum-post" onclick="showToast('📖 Abriendo post...','info')">
+      <div class="forum-avatar" style="background:${p.avC};color:#fff">${p.av}</div>
+      <div class="forum-body">
+        <div class="forum-title">${p.title}</div>
+        <div class="forum-meta">por <b>${p.user}</b> · ${p.cat} · ${p.time} <span style="margin-left:8px;background:rgba(79,143,255,.15);color:var(--accent);padding:1px 6px;border-radius:20px;font-size:.65rem">${p.tag}</span></div>
+        <div class="forum-stats"><span>💬 ${p.replies} respuestas</span><span>👁 ${p.views} vistas</span></div>
+      </div>
+    </div>`).join('');
+}
+
+// ============ RENDER GUILDS ============
+function renderGuilds() {
+  const el = document.getElementById('guilds-grid');
+  if(!el) return;
+  el.innerHTML = GUILDS.map(g=>`
+    <div class="guild-card">
+      <div class="guild-icon" style="background:linear-gradient(135deg,${g.color},rgba(0,0,0,.3))">${g.icon}</div>
+      <div class="guild-name">${g.name}</div>
+      <div class="guild-meta">👥 ${g.members.toLocaleString()} miembros · 🏷 ${g.tag}</div>
+      <p style="font-size:.78rem;color:var(--text2);margin:8px 0 12px">${g.desc}</p>
+      <button class="btn btn-primary btn-sm" style="width:100%" onclick="showToast('✅ Te uniste a ${g.name}','success')">Unirse al Gremio</button>
+    </div>`).join('');
+}
+
+// ============ RENDER MESSAGES ============
+function renderMessages() {
+  const el = document.getElementById('msg-list');
+  if(!el) return;
+  el.innerHTML = MSGS.map((m,i)=>`
+    <div class="msg-conv${i===0?' active':''}" onclick="selectConv(this,'${m.user}','${m.av}','${m.avC}')">
+      <div class="msg-conv-av" style="background:${m.avC};color:#fff">${m.av}</div>
+      <div class="msg-conv-info">
+        <div class="msg-conv-name">${m.user}${m.unread?`<span style="float:right;background:var(--red);color:#fff;font-size:.6rem;padding:1px 5px;border-radius:8px">${m.unread}</span>`:''}</div>
+        <div class="msg-conv-preview">${m.preview}</div>
+      </div>
+    </div>`).join('');
+}
+
+function selectConv(el, user, av, avC) {
+  document.querySelectorAll('.msg-conv').forEach(c=>c.classList.remove('active'));
+  el.classList.add('active');
+  const h = document.querySelector('.msg-header');
+  h.innerHTML = `<div class="msg-conv-av" style="background:${avC};color:#fff">${av}</div><div><div class="fw-700 fs-sm">${user}</div><div class="fs-xs text-muted">🟢 En línea</div></div><div style="margin-left:auto;display:flex;gap:6px"><button class="btn btn-ghost btn-xs" onclick="showToast('📞 Llamada de voz','info')">📞</button><button class="btn btn-ghost btn-xs" onclick="showToast('🎮 Invitar a jugar','info')">🎮</button></div>`;
+}
+
+function sendMsg() {
+  const input = document.getElementById('msg-text');
+  const text = input.value.trim();
+  if(!text) return;
+  const msgs = document.getElementById('msg-messages');
+  const div = document.createElement('div');
+  div.className = 'msg-bubble me';
+  div.textContent = text;
+  msgs.appendChild(div);
+  input.value = '';
+  msgs.scrollTop = msgs.scrollHeight;
+  setTimeout(()=>{
+    const auto = document.createElement('div');
+    auto.className = 'msg-bubble them';
+    const replies = ['¡Genial! 😄','Perfecto, ahí te veo.','¡Eso está increíble!','👍 Entendido','¡Vamos!','Oye, eso suena bien 🎮'];
+    auto.textContent = replies[Math.floor(Math.random()*replies.length)];
+    msgs.appendChild(auto);
+    msgs.scrollTop = msgs.scrollHeight;
+  }, 900);
+}
+
+// ============ RENDER ACHIEVEMENTS ============
+function renderAchievements() {
+  const el = document.getElementById('achievements-list');
+  if(!el) return;
+  el.innerHTML = ACHIEVEMENTS.map(a=>`
+    <div class="ach-card">
+      <div class="ach-icon" style="background:${a.color}22;border:1px solid ${a.color}44">${a.icon}</div>
+      <div class="ach-info">
+        <div class="ach-name">${a.name}${a.done?'<span style="margin-left:8px;color:var(--green);font-size:.72rem">✅ Completado</span>':''}</div>
+        <div class="ach-desc">${a.desc}</div>
+        <div class="progress-bar"><div class="progress-fill" style="width:${Math.min(100,(a.progress/a.max*100))}%;background:${a.color}"></div></div>
+        <div style="display:flex;justify-content:space-between;margin-top:4px;font-size:.68rem;color:var(--text3)"><span>${a.progress.toLocaleString()} / ${a.max.toLocaleString()}</span><span>+${a.xp} XP · +${a.bricks} 🧱</span></div>
+      </div>
+      ${a.done?`<button class="btn btn-gold btn-sm" onclick="showToast('🎁 Recompensa reclamada: +${a.bricks} Bricks','success')">Reclamar</button>`:`<button class="btn btn-ghost btn-sm" disabled style="opacity:.5">En progreso</button>`}
+    </div>`).join('');
+}
+
+// ============ RENDER CREATOR ============
+function renderCreator() {
+  const proj = [
+    {name:'MiMundo_v2',icon:'🏙',status:'Publicado',plays:'1.2K'},
+    {name:'Dungeon Alpha',icon:'⚔️',status:'Borrador',plays:'0'},
+    {name:'Sky Islands',icon:'☁️',status:'En revisión',plays:'234'},
+    {name:'Ocean Base',icon:'🌊',status:'Publicado',plays:'89'},
+  ];
+  const el = document.getElementById('creator-proj-grid');
+  if(el) el.innerHTML = proj.map(p=>`<div class="card" style="cursor:pointer" onclick="switchTab('creator','editor',document.querySelector('.tabs .tab:nth-child(4)'))">
+    <div style="font-size:2rem;margin-bottom:10px">${p.icon}</div>
+    <div class="fw-700 mb-8">${p.name}</div>
+    <div style="font-size:.75rem;color:var(--text2)">Estado: <span style="color:${p.status==='Publicado'?'var(--green)':p.status==='Borrador'?'var(--text3)':'var(--orange)'}">${p.status}</span></div>
+    <div style="font-size:.75rem;color:var(--text2);margin-top:4px">👥 ${p.plays} jugadas</div>
+    <button class="btn btn-ghost btn-sm" style="width:100%;margin-top:12px">✏️ Editar</button>
+  </div>`).join('');
+  
+  const templates = [
+    {name:'Baseplate',icon:'🟩',desc:'Plataforma vacía para empezar desde cero'},
+    {name:'Office Buildings',icon:'🏢',desc:'Ciudad con edificios de oficinas'},
+    {name:'Fantasy Castle',icon:'🏰',desc:'Castillo medieval completo'},
+    {name:'Racetrack',icon:'🏎',desc:'Circuito de carreras con curvas'},
+    {name:'Dungeon',icon:'🗡️',desc:'Mazmorra oscura con trampas'},
+    {name:'Island Paradise',icon:'🏝️',desc:'Isla tropical con agua'},
+  ];
+  const tEl = document.getElementById('templates-grid');
+  if(tEl) tEl.innerHTML = templates.map(t=>`<div class="card" style="cursor:pointer;text-align:center">
+    <div style="font-size:2.5rem;margin-bottom:10px">${t.icon}</div>
+    <div class="fw-700 mb-8">${t.name}</div>
+    <div style="font-size:.75rem;color:var(--text2);margin-bottom:12px">${t.desc}</div>
+    <button class="btn btn-primary btn-sm" style="width:100%" onclick="showToast('📁 Proyecto creado desde plantilla','success')">Usar Plantilla</button>
+  </div>`).join('');
+
+  const assets = [{name:'Epic BGM',icon:'🎵'},{name:'Rain Sound',icon:'🌧️'},{name:'Sword Hit',icon:'⚔️'},{name:'Victory',icon:'🏆'},{name:'Ambient',icon:'🌿'},{name:'Battle',icon:'🥊'},{name:'Menu Click',icon:'🖱️'},{name:'Explosion',icon:'💥'}];
+  const aEl = document.getElementById('assets-grid');
+  if(aEl) aEl.innerHTML = assets.map(a=>`<div class="card-sm" style="text-align:center;cursor:pointer" onclick="showToast('🎵 Asset añadido al proyecto','success')">
+    <div style="font-size:1.8rem;margin-bottom:6px">${a.icon}</div>
+    <div style="font-size:.78rem;font-weight:600">${a.name}</div>
+    <button class="btn btn-ghost btn-xs" style="margin-top:8px;width:100%">+ Añadir</button>
+  </div>`).join('');
+
+  const tools = ['🖊 Colocar','⬜ Bloque','🔵 Esfera','🔺 Cuña','🎨 Pintar','🔗 Unir','↕️ Mover','🔄 Rotar','📏 Escalar','🗑 Borrar','📋 Copiar','💡 Luz','🌊 Agua','🌿 Naturaleza'];
+  const toolEl = document.getElementById('tool-btns');
+  if(toolEl) toolEl.innerHTML = tools.map(t=>`<button class="btn btn-ghost btn-xs" style="width:100%;margin-bottom:4px;justify-content:flex-start" onclick="showToast('🛠 Herramienta: ${t}','info')">${t}</button>`).join('');
+
+  const canvas = document.getElementById('editor-canvas');
+  if(canvas) {
+    for(let i=0;i<96;i++) {
+      const cell = document.createElement('div');
+      cell.style.cssText = 'background:rgba(255,255,255,.02);border-radius:2px;cursor:crosshair;transition:.1s';
+      cell.onmouseenter = function(){this.style.background='rgba(79,143,255,.2)'};
+      cell.onmouseleave = function(){if(!this.dataset.placed)this.style.background='rgba(255,255,255,.02)'};
+      cell.onclick = function(){this.dataset.placed=this.dataset.placed?'':'1';this.style.background=this.dataset.placed?'rgba(79,143,255,.6)':'rgba(255,255,255,.02)'};
+      canvas.appendChild(cell);
+    }
+  }
+
+  const propsEl = document.getElementById('editor-props');
+  if(propsEl) propsEl.innerHTML = `
+    <div style="margin-bottom:8px"><div style="font-size:.68rem;color:var(--text3);margin-bottom:3px">Color</div><div style="display:flex;gap:4px;flex-wrap:wrap">${['#4f8fff','#ff4d6d','#22c55e','#f5c842','#a855f7','#f59e0b','#ffffff','#333'].map(c=>`<div style="width:18px;height:18px;border-radius:4px;background:${c};cursor:pointer;border:1px solid rgba(255,255,255,.1)" onclick="showToast('🎨 Color aplicado','info')"></div>`).join('')}</div></div>
+    <div style="margin-bottom:8px"><div style="font-size:.68px;color:var(--text3);margin-bottom:3px">Tamaño</div><input type="range" min="1" max="10" value="1" style="width:100%;accent-color:var(--accent)"></div>`;
+}
+
+// ============ RENDER ADMIN USERS TABLE ============
+function renderUsersTable() {
+  const el = document.getElementById('users-table');
+  if(!el) return;
+  el.innerHTML = USERS_ADMIN.map(u=>`<tr>
+    <td><div class="user-cell"><div class="user-av" style="background:${u.avC};color:#fff">${u.av}</div><div><div class="fw-700" style="font-size:.82rem">${u.name}</div></div></div></td>
+    <td><span style="font-family:'Orbitron',monospace;font-size:.78rem;color:var(--accent)">Lv.${u.level}</span></td>
+    <td><span class="status-badge ${u.status==='active'?'status-active':'status-banned'}">${u.status==='active'?'✅ Activo':'🔨 Baneado'}</span></td>
+    <td>${u.verified?'<span class="verified-badge">✔ Verificado</span>':'<span style="font-size:.72rem;color:var(--text3)">No verificado</span>'}</td>
+    <td><span style="color:var(--gold);font-size:.8rem">🧱 ${u.bricks.toLocaleString()}</span></td>
+    <td style="font-size:.72rem;color:var(--text2)">${u.joined}</td>
+    <td style="font-size:.72rem;color:var(--text2)">${u.last}</td>
+    <td><div class="action-btns">
+      <button class="btn btn-xs btn-ghost" onclick="showToast('👁 Perfil de ${u.name}','info')" title="Ver perfil">👁</button>
+      <button class="btn btn-xs btn-primary" onclick="openModal('verify-modal')" title="${u.verified?'Quitar verificación':'Verificar'}">${u.verified?'✖':'✔'}</button>
+      <button class="btn btn-xs btn-warning" onclick="openModal('warn-modal')" title="Advertir">⚠️</button>
+      <button class="btn btn-xs btn-ghost" onclick="openModal('msg-modal')" title="Mensaje">📨</button>
+      ${u.status==='active'?`<button class="btn btn-xs btn-danger" onclick="openModal('ban-modal')" title="Banear">🔨</button>`:`<button class="btn btn-xs btn-success" onclick="openModal('unban-modal')" title="Desbanear">✅</button>`}
+    </div></td>
+  </tr>`).join('');
+}
+
+// ============ RENDER CHARTS ============
+function renderCharts() {
+  const vals = [65,72,58,80,75,90,68];
+  const el = document.getElementById('dash-chart');
+  if(!el) return;
+  const max = Math.max(...vals);
+  el.innerHTML = vals.map((v,i)=>`<div class="bar" style="height:${(v/max*100)}%" title="${v}K usuarios"><div class="bar-label">${['L','M','X','J','V','S','D'][i]}</div></div>`).join('');
+}
+
+function renderAnalyticsCharts() {
+  const charts = [{id:'analytics-chart1',data:[40,55,62,48,70,66,80,74,90,85,95,88]},{id:'analytics-chart2',data:[120,140,95,160,175,145,200,185,220,205,250,230]}];
+  charts.forEach(c=>{
+    const el = document.getElementById(c.id);
+    if(!el) return;
+    const max = Math.max(...c.data);
+    el.innerHTML = c.data.map(v=>`<div class="bar" style="height:${(v/max*100)}%"></div>`).join('');
+  });
+}
+
+// ============ RENDER ALL OPTIONS ============
+function renderAllOptions() {
+  const el = document.getElementById('all-options-content');
+  if(!el) return;
+  const allOpts = [
+    {title:'👤 Gestión de Usuarios (15 opciones)',color:'accent',opts:['👁 Ver Perfil Completo','✏️ Editar Perfil de Usuario','🔑 Resetear Contraseña','📧 Cambiar Email','🏷 Cambiar Nombre de Usuario','🎮 Ver Historial de Juegos','🛍 Ver Inventario Completo','📊 Ver Estadísticas de Usuario','🔗 Exportar Datos de Usuario','🗑 Eliminar Cuenta','🔄 Transferir Cuenta','📌 Asignar Rol Admin','🏆 Asignar Rango Especial','📱 Ver Dispositivos Conectados','🔒 Bloquear Cambios de Perfil']},
+    {title:'🔨 Bans y Sanciones (12 opciones)',color:'red',opts:['🔨 Ban Permanente','⏱ Ban Temporal','🌐 Ban por IP','📱 Ban por Dispositivo','🔇 Silenciar Usuario','⚠️ Primera Advertencia','🟠 Segunda Advertencia','🔴 Advertencia Final','📋 Ver Historial de Bans','📨 Gestionar Apelaciones','↩️ Revertir Sanción','📊 Reporte de Sanciones']},
+    {title:'✔ Verificaciones (8 opciones)',color:'accent',opts:['✔ Verificación General','⭐ Creador Destacado','🎮 Desarrollador Oficial','🏆 Jugador Élite','📰 Medio/Prensa','✖ Quitar Verificación','📋 Ver Solicitudes Pendientes','📜 Modificar Criterios']},
+    {title:'📨 Mensajes y Comunicados (10 opciones)',color:'purple',opts:['📨 Mensaje Privado Oficial','📢 Broadcast Global','⚠️ Alerta de Emergencia','🎉 Mensaje de Evento','📋 Recordatorio de Normas','🔔 Notificación Masiva','📧 Email a Usuario','📧 Email Masivo','📣 Anuncio en Plataforma','📜 Historial de Mensajes Admin']},
+    {title:'🧱 Economía (12 opciones)',color:'gold',opts:['💰 Dar Bricks a Usuario','🗑 Quitar Bricks','🔍 Auditar Economía','🎉 Activar Evento 2x Bricks','❄️ Congelar Cuenta Económica','📋 Exportar Transacciones','↩️ Revertir Transacción','🏦 Ver Banco Global','📉 Ajuste de Inflación','🎁 Bonus a Todos los Usuarios','🔒 Límites de Transacción','💎 Generar Items Raros']},
+    {title:'🎮 Juegos (9 opciones)',color:'green',opts:['⭐ Destacar Juego','🗑 Eliminar Juego','⏸ Suspender Juego','✅ Verificar Juego','📊 Ver Estadísticas','📋 Ver Logs Servidor','🔞 Cambiar Clasificación','🔒 Forzar Privado','📢 Anunciar Juego']},
+    {title:'💬 Foro (8 opciones)',color:'text2',opts:['🗑 Eliminar Post','📌 Fijar Post','🔒 Bloquear Thread','📂 Mover Categoría','✅ Aprobar Post','📋 Gestionar Categorías','🏷 Gestionar Etiquetas','🗑 Eliminar Comentario']},
+    {title:'🛍 Tienda (9 opciones)',color:'gold',opts:['✅ Crear Item','🗑 Eliminar Item','💰 Modificar Precio','🔥 Activar Item Limitado','📊 Ver Ventas','⏸ Suspender Item','🏷 Gestionar Categorías','🎁 Crear Promoción','📋 Exportar Inventario']},
+    {title:'🛡 Gremios (6 opciones)',color:'accent',opts:['🗑 Disolver Gremio','⏸ Suspender Gremio','✅ Verificar Gremio','🏆 Crear Torneo','📊 Ver Estadísticas','👤 Expulsar Miembro']},
+    {title:'📢 Anuncios (6 opciones)',color:'orange',opts:['📢 Crear Anuncio General','⚠️ Anuncio de Mantenimiento','🎉 Anuncio de Evento','🔔 Alerta de Seguridad','📋 Ver Anuncios Activos','🗑 Eliminar Anuncio']},
+    {title:'⚙️ Sistema (12 opciones)',color:'text2',opts:['🔧 Modo Mantenimiento','💾 Crear Backup','🗑 Limpiar Caché','📊 Métricas Servidor','🔄 Reiniciar Servicio','📋 Ver Config Global','🌐 Vaciar CDN','🔒 Renovar SSL','📡 Status de API','🚨 Activar Anti-DDoS','🔍 Ver Errores','🚀 Deploy de Actualización']},
+    {title:'📊 Analytics (6 opciones)',color:'purple',opts:['📈 Reporte de Crecimiento','💰 Reporte de Ingresos','👥 Análisis de Usuarios','🎮 Análisis de Juegos','📉 Análisis de Retención','📋 Exportar Datos Analytics']},
+  ];
+  const total = allOpts.reduce((s,g)=>s+g.opts.length,0);
+  el.innerHTML = `<div style="font-size:.85rem;color:var(--accent);font-weight:700;margin-bottom:16px">Total: ${total} opciones de administración</div>` +
+  allOpts.map(group=>`<div class="admin-section">
+    <div class="admin-section-title">${group.title}</div>
+    <div class="admin-grid">${group.opts.map(o=>`<div class="admin-opt" onclick="showToast('⚙️ ${o}','info')">${o}</div>`).join('')}</div>
+  </div>`).join('');
+}
+
+// ============ RENDER LOGS ============
+const logEntries = [
+  {type:'info',msg:'[09:14:22] Usuario PixelBuilder_X inició sesión desde 192.168.1.1'},
+  {type:'info',msg:'[09:14:35] Transacción TX8821: +50 Bricks para PixelBuilder_X'},
+  {type:'warn',msg:'[09:15:01] Intento de login fallido x3 para DarkWizard99'},
+  {type:'error',msg:'[09:15:12] Rate limit excedido: IP 45.23.187.44 bloqueada temporalmente'},
+  {type:'info',msg:'[09:16:00] Juego "UrbanCraft" alcanzó 12,400 jugadores simultáneos'},
+  {type:'warn',msg:'[09:17:44] Uso de CPU en servidor US-EAST: 78% (alerta)'},
+  {type:'info',msg:'[09:18:30] Backup automático completado: 2.4GB guardados'},
+  {type:'error',msg:'[09:19:55] Error 500 en endpoint /api/games/list — resuelto automáticamente'},
+  {type:'debug',msg:'[09:20:00] Cache limpiado — 340MB liberados'},
+  {type:'info',msg:'[09:21:14] Nuevo usuario registrado: NightStar_Pro2'},
+];
+function renderLogs() {
+  const el = document.getElementById('log-terminal');
+  if(!el) return;
+  el.innerHTML = logEntries.map(l=>`<div class="log-${l.type}">${l.msg}</div>`).join('');
+  let i = logEntries.length;
+  setInterval(()=>{
+    const types = ['info','info','info','warn','error','debug'];
+    const messages = ['Transacción completada exitosamente','Nueva conexión WebSocket establecida','Juego cargado en servidor','Uso de memoria: 62%','Error de validación en formulario','Jugador entró al servidor SA-1'];
+    const t = types[Math.floor(Math.random()*types.length)];
+    const m = messages[Math.floor(Math.random()*messages.length)];
+    const now = new Date();
+    const ts = `[${now.getHours().toString().padStart(2,'0')}:${now.getMinutes().toString().padStart(2,'0')}:${now.getSeconds().toString().padStart(2,'0')}]`;
+    const div = document.createElement('div');
+    div.className = `log-${t}`;
+    div.textContent = `${ts} ${m}`;
+    el.appendChild(div);
+    el.scrollTop = el.scrollHeight;
+    if(el.children.length > 50) el.removeChild(el.firstChild);
+  }, 2800);
+}
+function clearLogs() {
+  const el = document.getElementById('log-terminal');
+  if(el) el.innerHTML = '<div class="log-info">[LOG] Terminal limpiado por administrador</div>';
+}
+
+// ============ RENDER INVENTORY ============
+function renderInventory() {
+  const items = [{e:'🎩',n:'Cyber Hat'},{e:'😏',n:'Ninja Face'},{e:'👑',n:'Corona'},{e:'🧥',n:'Neon Jacket'},{e:'⚔️',n:'Espada'},{e:'🦋',n:'Dragon Wings'}];
+  const el = document.getElementById('inventory-grid');
+  if(el) el.innerHTML = items.map(i=>`<div class="card-sm" style="text-align:center;cursor:pointer;min-width:80px" onclick="showToast('👁 Viendo ${i.n}','info')"><div style="font-size:1.8rem">${i.e}</div><div style="font-size:.65rem;color:var(--text2);margin-top:4px">${i.n}</div></div>`).join('');
+}
+
+// ============ MODAL ============
+function openModal(id) {
+  document.querySelectorAll('.modal').forEach(m=>m.style.display='none');
+  const modal = document.getElementById(id);
+  if(modal) {
+    modal.style.display='block';
+    document.getElementById('modal-overlay').style.display='flex';
+    currentModal = id;
+  }
+}
+function closeModal() {
+  document.getElementById('modal-overlay').style.display='none';
+  document.querySelectorAll('.modal').forEach(m=>m.style.display='none');
+  currentModal = null;
+}
+
+// ============ TOAST ============
+function showToast(msg, type='info') {
+  const container = document.getElementById('toast-container');
+  const toast = document.createElement('div');
+  toast.className = `toast ${type}`;
+  const icons = {success:'✅',error:'❌',warning:'⚠️',info:'ℹ️'};
+  toast.innerHTML = `<span>${icons[type]||'ℹ️'}</span><span>${msg}</span>`;
+  container.appendChild(toast);
+  setTimeout(()=>{toast.style.opacity='0';toast.style.transform='translateX(20px)';toast.style.transition='.3s';setTimeout(()=>toast.remove(),300)},3000);
+}
+
+// ============ KEYBOARD ============
+document.addEventListener('keydown',e=>{
+  if(e.key==='Escape' && currentModal) closeModal();
+});
+document.addEventListener('click',e=>{
+  const notif = document.getElementById('notif-panel');
+  if(!e.target.closest('.notif-wrap')) {
+    notif.classList.add('dropdown-hidden');
+    notif.classList.remove('dropdown-visible');
+  }
+});
+
+// ============ START ============
+init();
+</script>
+</body>
+</html>
